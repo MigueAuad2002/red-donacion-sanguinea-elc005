@@ -1,0 +1,25 @@
+#FASTAPI / PYTHON .GITIGNORE
+
+#ENTORNOS VIRTUALES
+venv/
+env/
+.venv/
+.env/
+
+#VARIABLES DE ENTORNO
+.env
+.env.local
+.env.*
+
+#ARCHIVOS DE PYTHON (CACHE Y DEMAS)
+__pycache__/
+*.py[cod]
+*$py.class
+
+#CACHE DE LAS PRUEBAS
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/

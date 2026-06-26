@@ -1,0 +1,22 @@
+#'.gitignore' GLOBAL
+
+#SISTEMAS OPERATIVOS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+#EDITORES DE CODIGO
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+#ARCHIVOS TEMPORALES
+*.log
+tmp/
+temp/

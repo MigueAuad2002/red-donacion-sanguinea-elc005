@@ -1,0 +1,26 @@
+#ANGULAR / NODE .GITIGNORE
+
+# Dependencias de Node
+node_modules/
+
+# Archivos de compilación de Angular
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Caché de Angular
+.angular/
+
+# Archivos de reportes y logs de errores
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+pnpm-debug.log
+
+# Reportes de pruebas (TDD/Karma/Jasmine)
+coverage/
+
+# Variables de entorno del frontend
+.env
+.env.local
