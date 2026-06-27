@@ -1,0 +1,293 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-4 py-5 sm:px-6 lg:px-8">
+
+  <div class="mx-auto w-full max-w-7xl">
+
+    <nav class="mb-5 flex flex-col gap-4 border-b border-[#D5D5D5] pb-5 sm:flex-row sm:items-center sm:justify-between">
+
+      <button
+        type="button"
+        (click)="volverHome()"
+        class="flex min-w-0 items-center gap-3 text-left"
+      >
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A]">
+          <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+
+        <div class="min-w-0">
+          <strong class="block truncate text-[13px] font-bold leading-snug text-gray-900 sm:text-[14px]">
+            Centro de Emergencias
+          </strong>
+          <span class="text-[11px] uppercase tracking-wide text-gray-400">
+            Gestión operativa de solicitudes de sangre
+          </span>
+        </div>
+      </button>
+
+      <div class="grid grid-cols-2 gap-2 sm:flex">
+        <button
+          type="button"
+          (click)="irMapa()"
+          class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+        >
+          Ver mapa
+        </button>
+
+        <button
+          type="button"
+          (click)="volverHome()"
+          class="h-10 rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+        >
+          Volver
+        </button>
+      </div>
+
+    </nav>
+
+    <section class="mb-5 grid grid-cols-3 overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center sm:px-5">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400 sm:text-[11px]">
+          Pendientes
+        </p>
+        <p class="mt-1 text-[20px] font-bold text-[#9B1A1A] sm:text-[24px]">
+          {{ totalPendientes }}
+        </p>
+      </div>
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center sm:px-5">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400 sm:text-[11px]">
+          En proceso
+        </p>
+        <p class="mt-1 text-[20px] font-bold text-amber-700 sm:text-[24px]">
+          {{ totalProceso }}
+        </p>
+      </div>
+
+      <div class="px-3 py-4 text-center sm:px-5">
+        <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400 sm:text-[11px]">
+          Atendidas
+        </p>
+        <p class="mt-1 text-[20px] font-bold text-green-700 sm:text-[24px]">
+          {{ totalAtendidas }}
+        </p>
+      </div>
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[280px_1fr]">
+
+      <aside class="h-fit rounded-[4px] border border-[#DADADA] bg-white">
+
+        <div class="border-b border-[#EBEBEB] px-5 py-4">
+          <h2 class="text-[13px] font-bold uppercase tracking-wide text-gray-900">
+            Filtros
+          </h2>
+          <p class="mt-0.5 text-[12px] text-gray-400">
+            Refina la búsqueda de emergencias.
+          </p>
+        </div>
+
+        <div class="space-y-4 px-5 py-5">
+
+          <div>
+            <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+              Buscar
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="busqueda"
+              placeholder="Hospital, grupo o zona"
+              class="h-11 w-full rounded-[3px] border border-[#CECECE] bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+            >
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+              Estado
+            </label>
+            <select
+              [(ngModel)]="estadoSeleccionado"
+              class="h-11 w-full rounded-[3px] border border-[#CECECE] bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+            >
+              <option value="TODOS">Todos</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="EN_PROCESO">En proceso</option>
+              <option value="ATENDIDA">Atendida</option>
+              <option value="CANCELADA">Cancelada</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+              Prioridad
+            </label>
+            <select
+              [(ngModel)]="prioridadSeleccionada"
+              class="h-11 w-full rounded-[3px] border border-[#CECECE] bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+            >
+              <option value="TODAS">Todas</option>
+              <option value="ALTA">Alta</option>
+              <option value="MEDIA">Media</option>
+              <option value="BAJA">Baja</option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            (click)="limpiarFiltros()"
+            class="h-10 w-full rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+          >
+            Limpiar filtros
+          </button>
+
+        </div>
+
+      </aside>
+
+      <section class="min-w-0 rounded-[4px] border border-[#DADADA] bg-white">
+
+        <div class="flex flex-col gap-3 border-b border-[#EBEBEB] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+              Bandeja de emergencias
+            </h1>
+            <p class="mt-0.5 text-[12px] text-gray-400">
+              {{ emergenciasFiltradas.length }} solicitudes encontradas
+            </p>
+          </div>
+
+          <span class="w-fit rounded-[3px] bg-[#FDF2F2] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+            Datos de prueba
+          </span>
+        </div>
+
+        <div *ngIf="emergenciasFiltradas.length > 0; else sinEmergencias" class="divide-y divide-[#EBEBEB]">
+
+          <article
+            *ngFor="let emergencia of emergenciasFiltradas"
+            class="group px-4 py-4 transition hover:bg-[#FAFAFA] sm:px-5"
+          >
+
+            <div class="grid gap-4 xl:grid-cols-[90px_1fr_150px_130px_110px] xl:items-center">
+
+              <div class="flex items-center justify-between xl:block">
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Código
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    #{{ emergencia.id }}
+                  </p>
+                </div>
+
+                <span
+                  class="rounded-[3px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide xl:hidden"
+                  [ngClass]="clasePrioridad(emergencia.prioridad)"
+                >
+                  {{ emergencia.prioridad }}
+                </span>
+              </div>
+
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h2 class="truncate text-[14px] font-bold text-gray-900">
+                    {{ emergencia.hospital }}
+                  </h2>
+
+                  <span
+                    class="rounded-[3px] border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                    [ngClass]="claseEstado(emergencia.estado)"
+                  >
+                    {{ textoEstado(emergencia.estado) }}
+                  </span>
+                </div>
+
+                <p class="mt-1 text-[13px] leading-5 text-gray-500">
+                  {{ emergencia.direccion }}
+                </p>
+
+                <p class="mt-1 text-[11px] uppercase tracking-wide text-gray-400">
+                  Paciente: {{ emergencia.paciente }}
+                </p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:block">
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Sangre
+                  </p>
+                  <p class="mt-1 text-[18px] font-bold text-[#9B1A1A]">
+                    {{ grupoSanguineo(emergencia) }}
+                  </p>
+                </div>
+
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Fecha
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ formatearFecha(emergencia.fecha) }}
+                  </p>
+                  <p class="text-[12px] text-gray-500">
+                    {{ emergencia.hora }}
+                  </p>
+                </div>
+
+                <div class="hidden sm:block xl:hidden">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Estado
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ textoEstado(emergencia.estado) }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="hidden xl:block">
+                <span
+                  class="rounded-[3px] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide"
+                  [ngClass]="clasePrioridad(emergencia.prioridad)"
+                >
+                  {{ emergencia.prioridad }}
+                </span>
+              </div>
+
+              <div class="flex items-center justify-end">
+                <button
+                  type="button"
+                  class="h-9 w-full rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A] sm:w-auto"
+                >
+                  Ver detalle
+                </button>
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+        <ng-template #sinEmergencias>
+          <div class="p-5">
+            <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+              <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+                No hay emergencias para mostrar
+              </h2>
+              <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+                Ajusta los filtros o espera a que se registren nuevas solicitudes.
+              </p>
+            </div>
+          </div>
+        </ng-template>
+
+      </section>
+
+    </section>
+
+    <p class="mt-5 text-center text-[11px] tracking-wide text-gray-400">
+      Proyecto académico · Ingeniería de la Calidad
+    </p>
+
+  </div>
+
+</main>

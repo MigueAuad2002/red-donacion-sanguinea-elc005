@@ -3,7 +3,9 @@ import { Routes } from '@angular/router';
 //COMPONENTES
 import { LoginComponent } from './pages/login/login';
 import { HomeComponent } from './pages/home/home';
-// import { PerfilComponent } from './pages/perfil/perfil';
+import { PerfilComponent } from './pages/perfil/perfil';
+import { EmergenciasListaComponent } from './pages/emergencias/emergencias-lista/emergencias-lista';
+import { EmergenciasMapaComponent } from './pages/emergencias/emergencias-mapa/emergencias-mapa';
 
 //LAYOUTS
 // import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout';
@@ -41,8 +43,25 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  /*
+  {
+    path:'perfil',
+    component:PerfilComponent,
+    canActivate: [authGuard]
+  },
 
+  {
+    path:'emergencias',
+    component:EmergenciasListaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path:'emergencias/mapa',
+    component:EmergenciasMapaComponent,
+    canActivate: [authGuard]
+  },
+
+
+  /*
   {
     path: 'perfil',
     component: PerfilComponent,
