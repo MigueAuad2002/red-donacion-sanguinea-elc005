@@ -1,0 +1,15 @@
+﻿fastapi
+uvicorn
+gunicorn
+psycopg2-binary
+sqlalchemy
+PyJWT
+werkzeug
+python-multipart
+python-dotenv
+pandas
+requests
+email-validator
+pydantic[email]
+websockets
+groq
