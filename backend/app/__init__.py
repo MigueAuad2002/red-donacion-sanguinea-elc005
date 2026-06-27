@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 #IMPORTAR RUTAS
-from app.routes import main_routes,auth_routes
+from app.routes import main_routes,auth_routes,profile_routes
 
 def create_app() -> FastAPI:
     app=FastAPI(
@@ -22,5 +22,6 @@ def create_app() -> FastAPI:
 
     app.include_router(main_routes.router)
     app.include_router(auth_routes.router,prefix='/api/auth')
+    app.include_router(profile_routes.router,prefix='/api/profile')
 
     return app
