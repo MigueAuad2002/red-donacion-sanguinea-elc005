@@ -1,0 +1,312 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-4 py-6 sm:px-6 lg:px-8">
+
+  <div class="mx-auto w-full max-w-6xl">
+
+    <nav class="mb-6 flex flex-col gap-4 border-b border-[#D5D5D5] pb-5 sm:flex-row sm:items-center sm:justify-between">
+
+      <button
+        type="button"
+        (click)="volverHome()"
+        class="flex min-w-0 items-center gap-3 text-left"
+      >
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A]">
+          <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+
+        <div class="min-w-0">
+          <strong class="block truncate text-[13px] font-bold leading-snug text-gray-900 sm:text-[14px]">
+            Perfil de usuario
+          </strong>
+          <span class="text-[11px] uppercase tracking-wide text-gray-400">
+            Red de Emparejamiento · Donaciones de Sangre
+          </span>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        (click)="volverHome()"
+        class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+      >
+        Volver
+      </button>
+
+    </nav>
+
+    <section class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
+
+      <div class="bg-[#9B1A1A] px-5 py-5 sm:px-7">
+        <h1 class="text-[15px] font-bold uppercase tracking-wide text-white">
+          Información personal
+        </h1>
+        <p class="mt-0.5 text-[12px] text-white/60">
+          Consulta tus datos y actualiza tu información de contacto.
+        </p>
+      </div>
+
+      <div *ngIf="isLoading" class="px-5 py-7 sm:px-7">
+        <p class="text-[13px] font-bold uppercase tracking-wide text-gray-500">
+          Cargando perfil...
+        </p>
+      </div>
+
+      <div *ngIf="!isLoading && errorMessage && !perfil" class="px-5 py-7 sm:px-7">
+        <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+          <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+            No se pudo mostrar el perfil
+          </h2>
+          <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+            {{ errorMessage }}
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && perfil" class="px-5 py-5 sm:px-7">
+
+        <div
+          *ngIf="errorMessage"
+          class="mb-5 rounded-sm border border-[#E8BFBF] border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-3.5 py-3"
+        >
+          <p class="text-[13px] leading-snug text-[#7A1A1A]">
+            {{ errorMessage }}
+          </p>
+        </div>
+
+        <div
+          *ngIf="successMessage"
+          class="mb-5 rounded-sm border border-green-200 border-l-[3px] border-l-green-700 bg-green-50 px-3.5 py-3"
+        >
+          <p class="text-[13px] leading-snug text-green-800">
+            {{ successMessage }}
+          </p>
+        </div>
+
+        <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+
+          <aside class="rounded-[4px] border border-[#DADADA] bg-[#FAFAFA] p-5">
+
+            <div class="flex flex-col items-center text-center">
+              <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#9B1A1A] text-[26px] font-bold text-white">
+                {{ obtenerInicial() }}
+              </div>
+
+              <h2 class="mt-4 text-[15px] font-bold leading-snug text-gray-900">
+                {{ perfil.nombre_completo || 'Usuario' }}
+              </h2>
+
+              <p class="mt-1 text-[11px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+                {{ perfil.nombre_rol || 'SIN ROL' }}
+              </p>
+
+              <div class="mt-4 rounded-[3px] border border-[#E8BFBF] bg-[#FDF2F2] px-4 py-2">
+                <p class="text-[11px] font-bold uppercase tracking-wide text-[#7A1A1A]">
+                  Grupo sanguíneo
+                </p>
+                <p class="mt-1 text-[18px] font-bold text-[#9B1A1A]">
+                  {{ grupoSanguineo() }}
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-5 space-y-3 border-t border-[#E5E5E5] pt-5">
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                  Estado
+                </p>
+                <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  {{ formatearEstado(perfil.estado) }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                  Registro
+                </p>
+                <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  {{ formatearFechaRegistro(perfil.fecha_registro) }}
+                </p>
+              </div>
+            </div>
+
+          </aside>
+
+          <section class="grid gap-5">
+
+            <div class="rounded-[4px] border border-[#DADADA] bg-white">
+
+              <div class="border-b border-[#EBEBEB] px-5 py-4">
+                <h3 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+                  Datos registrados
+                </h3>
+                <p class="mt-0.5 text-[12px] text-gray-400">
+                  Información principal registrada en el sistema.
+                </p>
+              </div>
+
+              <div class="grid gap-4 px-5 py-5 sm:grid-cols-2 xl:grid-cols-3">
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Código usuario
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ perfil.nro_usuario || 'No registrado' }}
+                  </p>
+                </div>
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Carnet de identidad
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ perfil.ci || 'No registrado' }}
+                  </p>
+                </div>
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Género
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ formatearGenero(perfil.genero) }}
+                  </p>
+                </div>
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Fecha nacimiento
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ formatearFechaSimple(perfil.fecha_nacimiento) }}
+                  </p>
+                </div>
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Tipo de sangre
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ perfil.tipo_sangre || 'No registrado' }}
+                  </p>
+                </div>
+
+                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    Factor RH
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                    {{ perfil.factor_rh || 'No registrado' }}
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="rounded-[4px] border border-[#DADADA] bg-white">
+
+              <div class="border-b border-[#EBEBEB] px-5 py-4">
+                <h3 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+                  Datos de contacto
+                </h3>
+                <p class="mt-0.5 text-[12px] text-gray-400">
+                  Puedes actualizar tu correo y teléfono.
+                </p>
+              </div>
+
+              <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="px-5 py-5">
+
+                <div class="grid gap-4 sm:grid-cols-2">
+
+                  <div>
+                    <label for="correo" class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                      Correo electrónico
+                    </label>
+
+                    <input
+                      id="correo"
+                      type="email"
+                      formControlName="correo"
+                      placeholder="correo@ejemplo.com"
+                      class="h-11 w-full rounded-[3px] border bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+                      [ngClass]="{
+                        'border-red-300 bg-red-50/60': correo.invalid && correo.touched,
+                        'border-[#CECECE]': !(correo.invalid && correo.touched)
+                      }"
+                    >
+
+                    <p *ngIf="correo.invalid && correo.touched" class="mt-1.5 text-[12px] text-[#9B1A1A]">
+                      {{ correoError }}
+                    </p>
+                  </div>
+
+                  <div>
+                    <label for="telefono" class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                      Teléfono
+                    </label>
+
+                    <input
+                      id="telefono"
+                      type="text"
+                      formControlName="telefono"
+                      placeholder="Ej. 70000000"
+                      inputmode="tel"
+                      class="h-11 w-full rounded-[3px] border bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+                      [ngClass]="{
+                        'border-red-300 bg-red-50/60': telefono.invalid && telefono.touched,
+                        'border-[#CECECE]': !(telefono.invalid && telefono.touched)
+                      }"
+                    >
+
+                    <p *ngIf="telefono.invalid && telefono.touched" class="mt-1.5 text-[12px] text-[#9B1A1A]">
+                      {{ telefonoError }}
+                    </p>
+                  </div>
+
+                </div>
+
+                <div class="mt-6 flex flex-col-reverse gap-3 border-t border-[#EBEBEB] pt-5 sm:flex-row sm:items-center sm:justify-end">
+
+                  <button
+                    type="button"
+                    (click)="cargarPerfil()"
+                    class="h-11 rounded-[3px] border border-[#CECECE] bg-white px-5 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+                  >
+                    Restaurar
+                  </button>
+
+                  <button
+                    type="submit"
+                    [disabled]="perfilForm.invalid || isSaving"
+                    class="flex h-11 items-center justify-center gap-2 rounded-[3px] bg-[#9B1A1A] px-5 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515] active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-[#C9A0A0]"
+                  >
+                    <span *ngIf="!isSaving">
+                      Guardar cambios
+                    </span>
+
+                    <span *ngIf="isSaving" class="flex items-center gap-2">
+                      <span class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                      Guardando
+                    </span>
+                  </button>
+
+                </div>
+
+              </form>
+            </div>
+
+          </section>
+
+        </div>
+      </div>
+
+    </section>
+
+    <p class="mt-5 text-center text-[11px] tracking-wide text-gray-400">
+      Proyecto académico · Ingeniería de la Calidad
+    </p>
+
+  </div>
+
+</main>
