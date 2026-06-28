@@ -1,8 +1,8 @@
-<main class="min-h-dvh bg-[#EBEBEB] px-4 py-6 sm:px-6 lg:px-8">
+<main class="min-h-dvh bg-[#EBEBEB] px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
 
   <div class="mx-auto w-full max-w-6xl">
 
-    <nav class="mb-6 flex flex-col gap-4 border-b border-[#D5D5D5] pb-5 sm:flex-row sm:items-center sm:justify-between">
+    <nav class="mb-5 flex flex-col gap-3 border-b border-[#D5D5D5] pb-4 sm:flex-row sm:items-center sm:justify-between">
 
       <button
         type="button"
@@ -16,10 +16,10 @@
         </div>
 
         <div class="min-w-0">
-          <strong class="block uppercase truncate text-[13px] font-bold leading-snug text-gray-900 sm:text-[14px]">
+          <strong class="block truncate text-[13px] font-bold uppercase leading-snug text-gray-900 sm:text-[14px]">
             Perfil de usuario
           </strong>
-          <span class="text-[11px] uppercase tracking-wide text-gray-400">
+          <span class="block truncate text-[11px] uppercase tracking-wide text-gray-400">
             Red de Emparejamiento · Donaciones de Sangre
           </span>
         </div>
@@ -37,22 +37,22 @@
 
     <section class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
 
-      <div class="bg-[#9B1A1A] px-5 py-5 sm:px-7">
-        <h1 class="text-[15px] font-bold uppercase tracking-wide text-white">
+      <div class="bg-[#9B1A1A] px-4 py-4 sm:px-7 sm:py-5">
+        <h1 class="text-[14px] font-bold uppercase tracking-wide text-white sm:text-[15px]">
           Información personal
         </h1>
-        <p class="mt-0.5 text-[12px] text-white/60">
+        <p class="mt-0.5 text-[12px] leading-5 text-white/70">
           Consulta tus datos y actualiza tu información de contacto.
         </p>
       </div>
 
-      <div *ngIf="isLoading" class="px-5 py-7 sm:px-7">
+      <div *ngIf="isLoading" class="px-4 py-7 sm:px-7">
         <p class="text-[13px] font-bold uppercase tracking-wide text-gray-500">
           Cargando perfil...
         </p>
       </div>
 
-      <div *ngIf="!isLoading && errorMessage && !perfil" class="px-5 py-7 sm:px-7">
+      <div *ngIf="!isLoading && errorMessage && !perfil" class="px-4 py-7 sm:px-7">
         <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
           <h2 class="text-[14px] font-bold text-[#7A1A1A]">
             No se pudo mostrar el perfil
@@ -63,11 +63,11 @@
         </div>
       </div>
 
-      <div *ngIf="!isLoading && perfil" class="px-5 py-5 sm:px-7">
+      <div *ngIf="!isLoading && perfil" class="px-4 py-4 sm:px-7 sm:py-5">
 
         <div
           *ngIf="errorMessage"
-          class="mb-5 rounded-sm border border-[#E8BFBF] border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-3.5 py-3"
+          class="mb-4 rounded-sm border border-[#E8BFBF] border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-3.5 py-3"
         >
           <p class="text-[13px] leading-snug text-[#7A1A1A]">
             {{ errorMessage }}
@@ -76,68 +76,91 @@
 
         <div
           *ngIf="successMessage"
-          class="mb-5 rounded-sm border border-green-200 border-l-[3px] border-l-green-700 bg-green-50 px-3.5 py-3"
+          class="mb-4 rounded-sm border border-green-200 border-l-[3px] border-l-green-700 bg-green-50 px-3.5 py-3"
         >
           <p class="text-[13px] leading-snug text-green-800">
             {{ successMessage }}
           </p>
         </div>
 
-        <div class="grid gap-5 lg:grid-cols-[320px_1fr]">
+        <div class="grid gap-4 lg:grid-cols-[300px_1fr]">
 
-          <aside class="rounded-[4px] border border-[#DADADA] bg-[#FAFAFA] p-5">
+          <aside class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-[#FAFAFA]">
 
-            <div class="flex flex-col items-center text-center">
-              <div class="flex h-20 w-20 items-center justify-center rounded-full bg-[#9B1A1A] text-[26px] font-bold text-white">
-                {{ obtenerInicial() }}
+            <div class="p-4 sm:p-5">
+
+              <div class="flex items-center gap-4 lg:flex-col lg:text-center">
+
+                <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-[#9B1A1A] text-[22px] font-bold text-white sm:h-20 sm:w-20 sm:text-[26px]">
+                  {{ obtenerInicial() }}
+                </div>
+
+                <div class="min-w-0 flex-1">
+                  <h2 class="truncate text-[14px] font-bold leading-snug text-gray-900 sm:text-[15px] lg:mt-4 lg:whitespace-normal">
+                    {{ perfil.nombre_completo || 'Usuario' }}
+                  </h2>
+
+                  <p class="mt-1 text-[11px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+                    {{ perfil.nombre_rol || 'SIN ROL' }}
+                  </p>
+                </div>
+
               </div>
 
-              <h2 class="mt-4 text-[15px] font-bold leading-snug text-gray-900">
-                {{ perfil.nombre_completo || 'Usuario' }}
-              </h2>
+              <div class="mt-4 grid grid-cols-2 overflow-hidden rounded-[4px] border border-[#E8BFBF] bg-[#FDF2F2]">
 
-              <p class="mt-1 text-[11px] font-bold uppercase tracking-wide text-[#9B1A1A]">
-                {{ perfil.nombre_rol || 'SIN ROL' }}
-              </p>
+                <div class="border-r border-[#E8BFBF] px-3 py-3 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-[#7A1A1A]">
+                    Grupo
+                  </p>
+                  <p class="mt-1 text-[18px] font-bold text-[#9B1A1A]">
+                    {{ grupoSanguineo() }}
+                  </p>
+                </div>
 
-              <div class="mt-4 rounded-[3px] border border-[#E8BFBF] bg-[#FDF2F2] px-4 py-2">
-                <p class="text-[11px] font-bold uppercase tracking-wide text-[#7A1A1A]">
-                  Grupo sanguíneo
-                </p>
-                <p class="mt-1 text-[18px] font-bold text-[#9B1A1A]">
-                  {{ grupoSanguineo() }}
-                </p>
+                <div class="px-3 py-3 text-center">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-[#7A1A1A]">
+                    Estado
+                  </p>
+                  <p class="mt-1 text-[13px] font-bold text-[#9B1A1A]">
+                    {{ formatearEstado(perfil.estado) }}
+                  </p>
+                </div>
+
               </div>
+
             </div>
 
-            <div class="mt-5 space-y-3 border-t border-[#E5E5E5] pt-5">
-              <div>
-                <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                  Estado
-                </p>
-                <p class="mt-1 text-[13px] font-bold text-gray-900">
-                  {{ formatearEstado(perfil.estado) }}
-                </p>
-              </div>
+            <div class="grid grid-cols-2 border-t border-[#E5E5E5] bg-white lg:grid-cols-1">
 
-              <div>
-                <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+              <div class="border-r border-[#E5E5E5] px-4 py-3 lg:border-r-0 lg:border-b">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
                   Registro
                 </p>
-                <p class="mt-1 text-[13px] font-bold text-gray-900">
+                <p class="mt-1 text-[12px] font-bold leading-5 text-gray-900">
                   {{ formatearFechaRegistro(perfil.fecha_registro) }}
                 </p>
               </div>
+
+              <div class="px-4 py-3">
+                <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                  Código
+                </p>
+                <p class="mt-1 text-[12px] font-bold leading-5 text-gray-900">
+                  {{ perfil.nro_usuario || 'No registrado' }}
+                </p>
+              </div>
+
             </div>
 
           </aside>
 
-          <section class="grid gap-5">
+          <section class="grid gap-4">
 
-            <div class="rounded-[4px] border border-[#DADADA] bg-white">
+            <div class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
 
-              <div class="border-b border-[#EBEBEB] px-5 py-4">
-                <h3 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+              <div class="border-b border-[#EBEBEB] px-4 py-4 sm:px-5">
+                <h3 class="text-[13px] font-bold uppercase tracking-wide text-gray-900 sm:text-[14px]">
                   Datos registrados
                 </h3>
                 <p class="mt-0.5 text-[12px] text-gray-400">
@@ -145,69 +168,70 @@
                 </p>
               </div>
 
-              <div class="grid gap-4 px-5 py-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div class="grid grid-cols-2 sm:grid-cols-3">
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                    Código usuario
+                <div class="border-b border-r border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Usuario
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ perfil.nro_usuario || 'No registrado' }}
                   </p>
                 </div>
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                    Carnet de identidad
+                <div class="border-b border-r border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    CI
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ perfil.ci || 'No registrado' }}
                   </p>
                 </div>
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <div class="border-b border-r border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
                     Género
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ formatearGenero(perfil.genero) }}
                   </p>
                 </div>
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                    Fecha nacimiento
+                <div class="border-b border-r border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Nacimiento
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ formatearFechaSimple(perfil.fecha_nacimiento) }}
                   </p>
                 </div>
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                    Tipo de sangre
+                <div class="border-b border-r border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Sangre
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ perfil.tipo_sangre || 'No registrado' }}
                   </p>
                 </div>
 
-                <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
-                  <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
-                    Factor RH
+                <div class="border-b border-[#EBEBEB] px-3 py-3 sm:px-4">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    RH
                   </p>
-                  <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
                     {{ perfil.factor_rh || 'No registrado' }}
                   </p>
                 </div>
 
               </div>
+
             </div>
 
-            <div class="rounded-[4px] border border-[#DADADA] bg-white">
+            <div class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
 
-              <div class="border-b border-[#EBEBEB] px-5 py-4">
-                <h3 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+              <div class="border-b border-[#EBEBEB] px-4 py-4 sm:px-5">
+                <h3 class="text-[13px] font-bold uppercase tracking-wide text-gray-900 sm:text-[14px]">
                   Datos de contacto
                 </h3>
                 <p class="mt-0.5 text-[12px] text-gray-400">
@@ -215,7 +239,7 @@
                 </p>
               </div>
 
-              <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="px-5 py-5">
+              <form [formGroup]="perfilForm" (ngSubmit)="guardarCambios()" class="px-4 py-4 sm:px-5 sm:py-5">
 
                 <div class="grid gap-4 sm:grid-cols-2">
 
@@ -266,7 +290,7 @@
 
                 </div>
 
-                <div class="mt-6 flex flex-col-reverse gap-3 border-t border-[#EBEBEB] pt-5 sm:flex-row sm:items-center sm:justify-end">
+                <div class="mt-5 flex flex-col-reverse gap-3 border-t border-[#EBEBEB] pt-5 sm:flex-row sm:items-center sm:justify-end">
 
                   <button
                     type="button"
@@ -294,11 +318,13 @@
                 </div>
 
               </form>
+
             </div>
 
           </section>
 
         </div>
+
       </div>
 
     </section>

@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { NotificationWsService, WsStatus } from '../../../services/notificaciones-ws';
+import {
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  inject
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+import { NotificationWsService } from '../../../services/notificaciones-ws';
 
 @Component({
   selector: 'app-ws-status',
@@ -8,56 +17,120 @@ import { NotificationWsService, WsStatus } from '../../../services/notificacione
   imports: [CommonModule],
   templateUrl: './ws-status.html'
 })
-export class WsStatusComponent {
-  wsService = inject(NotificationWsService);
+export class WsStatusComponent implements OnInit, OnDestroy {
+  private notificationWsService = inject(NotificationWsService);
+  private router = inject(Router);
 
-  status$ = this.wsService.status$;
-  ultimaNotificacion$ = this.wsService.ultimaNotificacion$;
+  private subscriptions: Subscription[] = [];
 
-  modoDiscreto = false;
+  status = 'DESCONECTADO';
+  menuAbierto = false;
+  tieneNuevaNotificacion = false;
 
-  reintentar(): void {
-    this.wsService.reconnect();
+  ngOnInit(): void {
+    const statusSub = this.notificationWsService.status$.subscribe((status) => {
+      this.status = status;
+    });
+
+    const notificacionSub = this.notificationWsService.ultimaNotificacion$.subscribe((notificacion) => {
+      if (!notificacion) {
+        return;
+      }
+
+      this.tieneNuevaNotificacion = true;
+    });
+
+    this.subscriptions.push(statusSub, notificacionSub);
   }
 
-  alternarModoDiscreto(): void {
-    this.modoDiscreto = !this.modoDiscreto;
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  textoEstado(status: WsStatus): string {
-    const textos: Record<WsStatus, string> = {
-      CONECTADO: 'Socket Activo',
-      CONECTANDO: 'Conectando Socket',
-      DESCONECTADO: 'Socket Desconectado',
-      ERROR: 'Socket sin Conexión'
+  @HostListener('document:click')
+  cerrarMenuDesdeFuera(): void {
+    if (this.menuAbierto) {
+      this.menuAbierto = false;
+    }
+  }
+
+  toggleMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.menuAbierto = !this.menuAbierto;
+
+    if (this.menuAbierto) {
+      this.tieneNuevaNotificacion = false;
+    }
+  }
+
+  abrirNotificaciones(event: MouseEvent): void {
+    event.stopPropagation();
+    this.menuAbierto = false;
+    this.tieneNuevaNotificacion = false;
+    this.router.navigate(['/notificaciones']);
+  }
+
+  reintentarConexion(event: MouseEvent): void {
+    event.stopPropagation();
+    this.notificationWsService.reconnect();
+  }
+
+  get estaConectado(): boolean {
+    return this.status === 'CONECTADO';
+  }
+
+  get estaConectando(): boolean {
+    return this.status === 'CONECTANDO';
+  }
+
+  get estaEnError(): boolean {
+    return this.status === 'ERROR' || this.status === 'DESCONECTADO';
+  }
+
+  get textoEstado(): string {
+    const estados: Record<string, string> = {
+      CONECTADO: 'WebSocket conectado',
+      CONECTANDO: 'Conectando...',
+      DESCONECTADO: 'WebSocket desconectado',
+      ERROR: 'Error de conexión'
     };
 
-    return textos[status];
+    return estados[this.status] || this.status;
   }
 
-  clasePunto(status: WsStatus): string {
-    const clases: Record<WsStatus, string> = {
-      CONECTADO: 'bg-green-600',
-      CONECTANDO: 'bg-amber-500 animate-pulse',
-      DESCONECTADO: 'bg-gray-400',
-      ERROR: 'bg-[#9B1A1A]'
-    };
+  get descripcionEstado(): string {
+    if (this.status === 'CONECTADO') {
+      return 'Recibirás alertas en tiempo real.';
+    }
 
-    return clases[status];
+    if (this.status === 'CONECTANDO') {
+      return 'Intentando establecer conexión.';
+    }
+
+    return 'No se están recibiendo alertas en vivo.';
   }
 
-  claseCaja(status: WsStatus): string {
-    const clases: Record<WsStatus, string> = {
-      CONECTADO: 'border-green-200 bg-green-50 text-green-800',
-      CONECTANDO: 'border-amber-200 bg-amber-50 text-amber-800',
-      DESCONECTADO: 'border-gray-200 bg-white text-gray-700',
-      ERROR: 'border-[#E8BFBF] bg-[#FDF2F2] text-[#7A1A1A]'
-    };
+  get claseEstadoDot(): string {
+    if (this.status === 'CONECTADO') {
+      return 'bg-green-500';
+    }
 
-    return clases[status];
+    if (this.status === 'CONECTANDO') {
+      return 'bg-amber-500';
+    }
+
+    return 'bg-[#9B1A1A]';
   }
 
-  mostrarBotonReintentar(status: WsStatus): boolean {
-    return status === 'ERROR' || status === 'DESCONECTADO';
+  get claseBotonPrincipal(): string {
+    if (this.status === 'CONECTADO') {
+      return 'border-green-200 bg-white text-green-700 shadow-green-900/10';
+    }
+
+    if (this.status === 'CONECTANDO') {
+      return 'border-amber-200 bg-white text-amber-700 shadow-amber-900/10';
+    }
+
+    return 'border-[#E8BFBF] bg-white text-[#9B1A1A] shadow-red-900/10';
   }
 }
