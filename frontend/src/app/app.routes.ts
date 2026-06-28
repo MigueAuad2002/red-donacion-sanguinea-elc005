@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 //COMPONENTES
 import { LoginComponent } from './pages/login/login';
 import { HomeComponent } from './pages/home/home';
+import { UsersComponent } from './pages/users/users';
 // import { PerfilComponent } from './pages/perfil/perfil';
 
 //LAYOUTS
@@ -25,7 +26,7 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [publicGuard]
   },
-
+ 
   /*
   {
     path: 'register',
@@ -39,6 +40,11 @@ export const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [authGuard]
+  },
+   {
+    path: 'usuarios',
+  component: UsersComponent,
+  canActivate: [authGuard]
   },
 
   /*

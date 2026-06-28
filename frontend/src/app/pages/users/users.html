@@ -1,0 +1,141 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-4 py-6 sm:px-6 lg:px-8">
+
+  <div class="mx-auto w-full max-w-7xl">
+
+    <!-- HEADER -->
+    <section class="mb-6 overflow-hidden rounded-[4px] border border-[#DADADA] bg-white">
+
+      <div class="bg-[#9B1A1A] px-5 py-5 sm:px-7">
+        <h1 class="text-[15px] font-bold uppercase tracking-wide text-white">
+          Gestión de Usuarios
+        </h1>
+        <p class="mt-0.5 text-[12px] text-white/60">
+          Lista de usuarios registrados en el sistema
+        </p>
+      </div>
+
+      <div class="grid gap-4 px-5 py-5 sm:grid-cols-3 sm:px-7">
+
+        <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+            Total usuarios
+          </p>
+          <p class="mt-1 text-[22px] font-bold text-gray-900">
+            {{ usuarios?.length || 0 }}
+          </p>
+        </div>
+
+        <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+            Estado
+          </p>
+          <p class="mt-1 text-[13px] font-bold uppercase text-gray-900">
+            {{ cargando ? 'Cargando' : 'Activo' }}
+          </p>
+        </div>
+
+        <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+          <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+            Módulo
+          </p>
+          <p class="mt-1 text-[13px] font-bold uppercase text-gray-900">
+            Administración
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- 🔎 BUSCADOR (BIEN UBICADO) -->
+    <div class="mb-4 flex justify-end">
+      <input
+        type="text"
+        [(ngModel)]="filtro"
+        placeholder="Buscar por nombre o CI..."
+        class="w-full sm:max-w-sm rounded-[4px] border border-[#DADADA] bg-white px-4 py-2 text-sm shadow-sm outline-none focus:border-[#9B1A1A]"
+      />
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="cargando" class="rounded-[4px] border border-[#DADADA] bg-white p-5">
+      <p class="text-sm text-gray-600">Cargando usuarios...</p>
+    </div>
+
+    <!-- TABLA -->
+    <section
+      *ngIf="!cargando && usuarios && usuarios.length > 0"
+      class="overflow-hidden rounded-[4px] border border-[#DADADA] bg-white"
+    >
+
+      <div class="border-b border-[#EBEBEB] px-5 py-4">
+        <h2 class="text-[13px] font-bold uppercase tracking-wide text-gray-700">
+          Lista de usuarios
+        </h2>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+
+          <thead class="bg-[#FAFAFA] text-[11px] uppercase tracking-wide text-gray-500">
+            <tr>
+              <th class="px-5 py-3">ID</th>
+              <th class="px-5 py-3">Nombre</th>
+              <th class="px-5 py-3">CI</th>
+              <th class="px-5 py-3">Rol</th>
+              <th class="px-5 py-3">Sangre</th>
+            </tr>
+          </thead>
+
+          <tbody class="divide-y divide-[#EBEBEB]">
+
+            <tr
+              *ngFor="let u of usuariosFiltrados"
+              class="hover:bg-[#FAFAFA] transition"
+            >
+              <td class="px-5 py-3 text-sm text-gray-900">
+                {{ u.nro_usuario }}
+              </td>
+
+              <td class="px-5 py-3 text-sm font-medium text-gray-900">
+                {{ u.nombre_completo }}
+              </td>
+
+              <td class="px-5 py-3 text-sm text-gray-600">
+                {{ u.ci }}
+              </td>
+
+              <td class="px-5 py-3 text-sm text-gray-600 uppercase">
+                {{ u.nombre_rol }}
+              </td>
+
+              <td class="px-5 py-3 text-sm font-bold text-[#9B1A1A]">
+                {{ u.tipo_sangre }}{{ u.factor_rh }}
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </section>
+
+    <!-- EMPTY STATE -->
+    <section
+      *ngIf="!cargando && usuarios && usuarios.length === 0"
+      class="rounded-[4px] border border-[#DADADA] bg-white p-5"
+    >
+      <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+        <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+          No hay usuarios registrados
+        </h2>
+        <p class="mt-1 text-[13px] text-[#7A1A1A]">
+          Aún no existen usuarios en el sistema.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+</main>
