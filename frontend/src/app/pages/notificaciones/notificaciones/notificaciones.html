@@ -1,0 +1,306 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-4 py-5 sm:px-6 lg:px-8">
+
+  <div class="mx-auto w-full max-w-7xl">
+
+    <nav class="mb-5 flex flex-col gap-4 border-b border-[#D5D5D5] pb-5 sm:flex-row sm:items-center sm:justify-between">
+
+      <button
+        type="button"
+        (click)="volverHome()"
+        class="flex min-w-0 items-center gap-3 text-left"
+      >
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A]">
+          <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+
+        <div class="min-w-0">
+          <strong class="block uppercase truncate text-[13px] font-bold leading-snug text-gray-900 sm:text-[14px]">
+            Centro de Notificaciones
+          </strong>
+          <span class="text-[11px] uppercase tracking-wide text-gray-400">
+            Alertas, avisos y emergencias recibidas
+          </span>
+        </div>
+      </button>
+
+      <div class="grid grid-cols-2 gap-2 sm:flex">
+        <button
+          type="button"
+          (click)="cargarNotificaciones()"
+          class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+        >
+          Actualizar
+        </button>
+
+        <button
+          type="button"
+          (click)="volverHome()"
+          class="h-10 rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+        >
+          Volver
+        </button>
+      </div>
+
+    </nav>
+
+    <!-- KPIs: ocultos en móvil, visibles desde sm -->
+    <section class="mb-5 hidden overflow-hidden rounded-[4px] border border-[#DADADA] bg-white sm:grid sm:grid-cols-4">
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Total
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-gray-900">
+          {{ totalNotificaciones }}
+        </p>
+      </div>
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          No leídas
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-[#9B1A1A]">
+          {{ totalNoLeidas }}
+        </p>
+      </div>
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Leídas
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-green-700">
+          {{ totalLeidas }}
+        </p>
+      </div>
+
+      <div class="px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Emergencias
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-[#9B1A1A]">
+          {{ totalEmergencias }}
+        </p>
+      </div>
+
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[280px_1fr]">
+
+      <aside class="h-fit rounded-[4px] border border-[#DADADA] bg-white">
+
+        <div class="border-b border-[#EBEBEB] px-5 py-4">
+          <h2 class="text-[13px] font-bold uppercase tracking-wide text-gray-900">
+            Filtros
+          </h2>
+          <p class="mt-0.5 text-[12px] text-gray-400">
+            Organiza tu bandeja de alertas.
+          </p>
+        </div>
+
+        <div class="space-y-4 px-5 py-5">
+
+          <div>
+            <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+              Buscar
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="busqueda"
+              placeholder="Título, mensaje o emergencia"
+              class="h-11 w-full rounded-[3px] border border-[#CECECE] bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 lg:grid-cols-1">
+            <button
+              *ngFor="let filtro of filtros"
+              type="button"
+              (click)="cambiarFiltro(filtro)"
+              class="flex h-10 items-center rounded-[3px] border px-3 text-[11px] font-bold uppercase tracking-wide transition"
+              [ngClass]="claseFiltro(filtro)"
+            >
+              <span>
+                {{ textoFiltro(filtro) }} ({{ contadorFiltro(filtro) }})
+              </span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            (click)="limpiarFiltros()"
+            class="h-10 w-full rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+          >
+            Limpiar filtros
+          </button>
+
+        </div>
+
+      </aside>
+
+      <section class="min-w-0 rounded-[4px] border border-[#DADADA] bg-white">
+
+        <div class="flex flex-col gap-3 border-b border-[#EBEBEB] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+              Bandeja de notificaciones
+            </h1>
+            <p class="mt-0.5 text-[12px] text-gray-400">
+              {{ notificacionesFiltradas.length }} notificaciones encontradas
+            </p>
+          </div>
+
+          <span
+            *ngIf="isUpdating"
+            class="w-fit rounded-[3px] bg-amber-50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-amber-700"
+          >
+            Actualizando
+          </span>
+
+          <span
+            *ngIf="!isUpdating && totalNoLeidas > 0"
+            class="w-fit rounded-[3px] bg-[#FDF2F2] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#9B1A1A]"
+          >
+            {{ totalNoLeidas }} pendientes
+          </span>
+        </div>
+
+        <div
+          *ngIf="errorMessage"
+          class="m-5 border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3"
+        >
+          <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+            Ocurrió un problema
+          </h2>
+          <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+            {{ errorMessage }}
+          </p>
+        </div>
+
+        <div
+          *ngIf="successMessage"
+          class="m-5 border-l-[3px] border-l-green-700 bg-green-50 px-4 py-3"
+        >
+          <p class="text-[13px] font-bold text-green-800">
+            {{ successMessage }}
+          </p>
+        </div>
+
+        <div *ngIf="isLoading" class="px-5 py-8">
+          <p class="text-[13px] font-bold uppercase tracking-wide text-gray-500">
+            Cargando notificaciones...
+          </p>
+        </div>
+
+        <div
+          *ngIf="!isLoading && notificacionesFiltradas.length > 0; else sinNotificaciones"
+          class="divide-y divide-[#EBEBEB]"
+        >
+
+          <article
+            *ngFor="let notificacion of notificacionesFiltradas; trackBy: trackByNotificacion"
+            class="border-l-[4px] px-4 py-4 transition hover:bg-[#FAFAFA] sm:px-5"
+            [ngClass]="claseLectura(notificacion)"
+          >
+
+            <div class="grid gap-4 xl:grid-cols-[1fr_170px_130px] xl:items-center">
+
+              <div class="min-w-0">
+
+                <div class="mb-2 flex flex-wrap items-center gap-2">
+
+                  <span
+                    class="rounded-[3px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
+                    [ngClass]="claseTipo(notificacion)"
+                  >
+                    {{ textoTipo(notificacion) }}
+                  </span>
+
+                  <span
+                    class="rounded-[3px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
+                    [ngClass]="claseBadgeLectura(notificacion)"
+                  >
+                    {{ textoLectura(notificacion) }}
+                  </span>
+
+                  <span
+                    *ngIf="notificacion.nro_emergencia"
+                    class="rounded-[3px] border border-[#DADADA] bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-gray-500"
+                  >
+                    Emergencia #{{ notificacion.nro_emergencia }}
+                  </span>
+
+                </div>
+
+                <h2 class="text-[14px] font-bold leading-snug text-gray-900">
+                  {{ notificacion.titulo }}
+                </h2>
+
+                <p class="mt-1 text-[13px] leading-6 text-gray-600">
+                  {{ notificacion.cuerpo }}
+                </p>
+
+              </div>
+
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                  Fecha
+                </p>
+                <p class="mt-1 text-[13px] font-bold text-gray-900">
+                  {{ formatearFecha(notificacion.fecha_creacion) }}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-2 sm:flex-row xl:flex-col">
+
+                <button
+                  type="button"
+                  (click)="marcarComoLeida(notificacion)"
+                  [disabled]="notificacion.leido === 'LEIDO' || isUpdating"
+                  class="h-9 rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Marcar leída
+                </button>
+
+                <button
+                  type="button"
+                  (click)="abrirReferencia(notificacion)"
+                  class="h-9 rounded-[3px] bg-[#9B1A1A] px-3 text-[11px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+                >
+                  Ver referencia
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+        <ng-template #sinNotificaciones>
+          <div *ngIf="!isLoading" class="p-5">
+            <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+              <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+                No hay notificaciones para mostrar
+              </h2>
+              <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+                Ajusta los filtros o espera nuevas alertas del sistema.
+              </p>
+            </div>
+          </div>
+        </ng-template>
+
+      </section>
+
+    </section>
+
+    <p class="mt-5 text-center text-[11px] tracking-wide text-gray-400">
+      Proyecto académico · Ingeniería de la Calidad
+    </p>
+
+  </div>
+
+</main>
