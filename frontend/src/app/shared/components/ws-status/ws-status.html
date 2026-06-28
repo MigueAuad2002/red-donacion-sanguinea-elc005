@@ -1,0 +1,74 @@
+<div
+  *ngIf="status$ | async as status"
+  class="fixed bottom-3 left-3 right-3 z-50 sm:bottom-5 sm:left-auto sm:right-5 sm:w-[360px]"
+>
+  <div
+    class="group rounded-[4px] border px-3 py-2.5 shadow-sm transition-all duration-200 sm:px-4 sm:py-3"
+    [ngClass]="[
+      claseCaja(status),
+      modoDiscreto
+        ? 'opacity-35 hover:opacity-100 hover:shadow-md scale-[0.96] hover:scale-100 cursor-pointer'
+        : 'opacity-100'
+    ]"
+    (click)="modoDiscreto && alternarModoDiscreto()"
+  >
+
+    <div class="flex items-start justify-between gap-3">
+
+      <div class="min-w-0">
+
+        <div class="flex items-center gap-2">
+          <span
+            class="h-2.5 w-2.5 rounded-full"
+            [ngClass]="clasePunto(status)"
+          ></span>
+
+          <p class="text-[12px] font-bold uppercase tracking-wide">
+            {{ textoEstado(status) }}
+          </p>
+        </div>
+
+        <ng-container *ngIf="!modoDiscreto">
+          <ng-container *ngIf="ultimaNotificacion$ | async as notificacion">
+            <div class="mt-2 border-t border-black/5 pt-2">
+              <p class="truncate text-[12px] font-bold">
+                {{ notificacion.titulo }}
+              </p>
+              <p class="mt-0.5 line-clamp-2 text-[12px] leading-5 opacity-80">
+                {{ notificacion.cuerpo }}
+              </p>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <p *ngIf="modoDiscreto" class="mt-1 text-[11px] opacity-70">
+          Click para mostrar
+        </p>
+
+      </div>
+
+      <div class="flex flex-shrink-0 items-center gap-2">
+
+        <button
+          *ngIf="mostrarBotonReintentar(status) && !modoDiscreto"
+          type="button"
+          (click)="reintentar(); $event.stopPropagation()"
+          class="h-8 rounded-[3px] border border-current px-3 text-[10px] font-bold uppercase tracking-wide transition hover:bg-white/60"
+        >
+          Reintentar
+        </button>
+
+        <button
+          type="button"
+          (click)="alternarModoDiscreto(); $event.stopPropagation()"
+          class="h-8 rounded-[3px] border border-current px-3 text-[10px] font-bold uppercase tracking-wide transition hover:bg-white/60"
+        >
+          {{ modoDiscreto ? 'Mostrar' : 'Ocultar' }}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

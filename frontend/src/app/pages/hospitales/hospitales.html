@@ -1,0 +1,622 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-4 py-5 sm:px-6 lg:px-8">
+
+  <div class="mx-auto w-full max-w-7xl">
+
+    <nav class="mb-5 flex flex-col gap-4 border-b border-[#D5D5D5] pb-5 sm:flex-row sm:items-center sm:justify-between">
+
+      <button
+        type="button"
+        (click)="volverHome()"
+        class="flex min-w-0 items-center gap-3 text-left"
+      >
+        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A]">
+          <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+
+        <div class="min-w-0">
+          <strong class="block truncate text-[13px] font-bold leading-snug text-gray-900 sm:text-[14px]">
+            GESTIÓN DE HOSPITALES
+          </strong>
+          <span class="text-[11px] uppercase tracking-wide text-gray-400">
+            Registro, ubicación e inventario sanguíneo inicial
+          </span>
+        </div>
+      </button>
+
+      <div class="grid grid-cols-2 gap-2 sm:flex">
+        <button
+          *ngIf="esAdministrador"
+          type="button"
+          (click)="abrirCrear()"
+          class="h-10 rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+        >
+          Nuevo hospital
+        </button>
+
+        <button
+          type="button"
+          (click)="volverHome()"
+          class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+        >
+          Volver
+        </button>
+      </div>
+
+    </nav>
+
+    <section class="mb-5 hidden overflow-hidden rounded-[4px] border border-[#DADADA] bg-white sm:grid sm:grid-cols-4">
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Hospitales
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-gray-900">
+          {{ totalHospitales }}
+        </p>
+      </div>
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Con ubicación
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-green-700">
+          {{ totalConUbicacion }}
+        </p>
+      </div>
+
+      <div class="border-r border-[#EBEBEB] px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Sin ubicación
+        </p>
+        <p class="mt-1 text-[24px] font-bold text-amber-700">
+          {{ totalSinUbicacion }}
+        </p>
+      </div>
+
+      <div class="px-3 py-4 text-center">
+        <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+          Inventario
+        </p>
+        <p class="mt-2 text-[13px] font-bold uppercase text-[#9B1A1A]">
+          Automático
+        </p>
+      </div>
+
+    </section>
+
+    <section class="grid gap-5 lg:grid-cols-[420px_1fr]">
+
+      <aside
+        #formularioHospital
+        class="h-fit rounded-[4px] border border-[#DADADA] bg-white"
+      >
+
+        <div class="border-b border-[#EBEBEB] px-5 py-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="text-[13px] font-bold uppercase tracking-wide text-gray-900">
+                {{ esAdministrador ? 'Panel de gestión' : 'Modo consulta' }}
+              </h2>
+              <p class="mt-0.5 text-[12px] leading-5 text-gray-400">
+                {{ esAdministrador ? 'Gestiona datos y ubicación del hospital.' : 'Solo puedes visualizar hospitales registrados.' }}
+              </p>
+            </div>
+
+            <span
+              class="rounded-[3px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
+              [ngClass]="esAdministrador ? 'bg-[#FDF2F2] text-[#9B1A1A]' : 'bg-gray-100 text-gray-500'"
+            >
+              {{ rolUsuario || 'ROL' }}
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="!esAdministrador" class="px-5 py-5">
+          <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+            <h3 class="text-[14px] font-bold text-[#7A1A1A]">
+              Vista de consulta
+            </h3>
+            <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+              Tu rol puede revisar hospitales y abrir sus ubicaciones en el mapa, pero no registrar, editar ni eliminar.
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="esAdministrador && !mostrarFormulario" class="space-y-4 px-5 py-5">
+
+          <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3">
+            <h3 class="text-[14px] font-bold text-gray-900">
+              Flujo recomendado
+            </h3>
+            <p class="mt-1 text-[13px] leading-5 text-gray-500">
+              Registra el hospital, selecciona su ubicación desde el mapa y el sistema inicializará automáticamente su inventario sanguíneo.
+            </p>
+          </div>
+
+          <div class="grid gap-2">
+            <div class="flex items-center gap-3 rounded-[4px] border border-[#EBEBEB] bg-white px-3 py-3">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#9B1A1A] text-[11px] font-bold text-white">
+                1
+              </span>
+              <p class="text-[12px] leading-5 text-gray-600">
+                Completa nombre y dirección.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 rounded-[4px] border border-[#EBEBEB] bg-white px-3 py-3">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#9B1A1A] text-[11px] font-bold text-white">
+                2
+              </span>
+              <p class="text-[12px] leading-5 text-gray-600">
+                Selecciona ubicación exacta en el mapa.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 rounded-[4px] border border-[#EBEBEB] bg-white px-3 py-3">
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[#9B1A1A] text-[11px] font-bold text-white">
+                3
+              </span>
+              <p class="text-[12px] leading-5 text-gray-600">
+                Guarda y se crea el inventario inicial en 0 litros.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="abrirCrear()"
+            class="h-11 w-full rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+          >
+            Registrar nuevo hospital
+          </button>
+
+        </div>
+
+        <form
+          *ngIf="esAdministrador && mostrarFormulario"
+          [formGroup]="hospitalForm"
+          (ngSubmit)="guardarHospital()"
+          class="px-5 py-5"
+        >
+
+          <div class="mb-5 flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-[15px] font-bold uppercase tracking-wide text-gray-900">
+                {{ formularioTitulo }}
+              </h3>
+              <p class="mt-1 text-[12px] leading-5 text-gray-400">
+                {{ formularioDescripcion }}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="cancelarFormulario()"
+              class="rounded-[3px] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-gray-500 transition hover:bg-[#FDF2F2] hover:text-[#9B1A1A]"
+            >
+              Cerrar
+            </button>
+          </div>
+
+          <div class="mb-5 grid grid-cols-3 overflow-hidden rounded-[4px] border border-[#E5E5E5] bg-[#FAFAFA]">
+            <div class="border-r border-[#E5E5E5] px-2 py-3 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+                Datos
+              </p>
+            </div>
+
+            <div class="border-r border-[#E5E5E5] px-2 py-3 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+                Ubicación
+              </p>
+            </div>
+
+            <div class="px-2 py-3 text-center">
+              <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+                Guardar
+              </p>
+            </div>
+          </div>
+
+          <section class="mb-5 rounded-[4px] border border-[#EBEBEB] bg-white">
+            <div class="border-b border-[#EBEBEB] px-4 py-3">
+              <h4 class="text-[12px] font-bold uppercase tracking-wide text-gray-900">
+                1. Datos del hospital
+              </h4>
+              <p class="mt-0.5 text-[11px] leading-5 text-gray-400">
+                Información visible para usuarios y operadores.
+              </p>
+            </div>
+
+            <div class="space-y-4 px-4 py-4">
+
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                  Nombre del hospital
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="nombre_hospital"
+                  placeholder="Ej. Hospital Universitario Japonés"
+                  class="h-11 w-full rounded-[3px] border bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': nombreHospital.invalid && nombreHospital.touched,
+                    'border-[#CECECE]': !(nombreHospital.invalid && nombreHospital.touched)
+                  }"
+                >
+
+                <p *ngIf="nombreHospital.invalid && nombreHospital.touched" class="mt-1.5 text-[12px] text-[#9B1A1A]">
+                  El nombre es obligatorio y debe tener al menos 3 caracteres.
+                </p>
+              </div>
+
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                  Dirección
+                </label>
+
+                <textarea
+                  rows="3"
+                  formControlName="direccion"
+                  placeholder="Dirección del hospital"
+                  class="w-full resize-none rounded-[3px] border bg-[#FAFAFA] px-3 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': direccion.invalid && direccion.touched,
+                    'border-[#CECECE]': !(direccion.invalid && direccion.touched)
+                  }"
+                ></textarea>
+
+                <p *ngIf="direccion.invalid && direccion.touched" class="mt-1.5 text-[12px] text-[#9B1A1A]">
+                  La dirección es obligatoria y debe tener al menos 5 caracteres.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section class="mb-5 rounded-[4px] border border-[#EBEBEB] bg-white">
+            <div class="border-b border-[#EBEBEB] px-4 py-3">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h4 class="text-[12px] font-bold uppercase tracking-wide text-gray-900">
+                    2. Ubicación geográfica
+                  </h4>
+                  <p class="mt-0.5 text-[11px] leading-5 text-gray-400">
+                    Selecciona la ubicación exacta. Las coordenadas se llenan automáticamente.
+                  </p>
+                </div>
+
+                <span
+                  class="w-fit rounded-[3px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide"
+                  [ngClass]="coordenadasFormularioValidas ? 'border-green-200 bg-green-50 text-green-700' : 'border-amber-200 bg-amber-50 text-amber-700'"
+                >
+                  {{ coordenadasFormularioValidas ? 'Ubicación lista' : 'Pendiente' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="space-y-4 px-4 py-4">
+
+              <app-mapa-ubicaciones
+                *ngIf="mostrarMapaFormulario"
+                [latitud]="latitud.value"
+                [longitud]="longitud.value"
+                [modoSeleccion]="true"
+                [zoom]="15"
+                altura="320px"
+                titulo="Mapa del hospital"
+                descripcion="Haz click en el mapa o arrastra el marcador para definir la ubicación."
+                (coordenadasSeleccionadas)="actualizarCoordenadasDesdeMapa($event)">
+              </app-mapa-ubicaciones>
+
+              <div class="rounded-[4px] border border-[#EBEBEB] bg-[#FAFAFA] px-4 py-3">
+                <p class="text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                  Coordenadas generadas
+                </p>
+                <p class="mt-1 break-words text-[13px] font-bold text-gray-800">
+                  {{ coordenadasFormularioTexto }}
+                </p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                    Latitud
+                  </label>
+
+                  <input
+                    type="number"
+                    step="any"
+                    formControlName="latitud"
+                    readonly
+                    placeholder="Selecciona en mapa"
+                    class="h-11 w-full rounded-[3px] border bg-[#F5F5F5] px-3 text-sm text-gray-700 outline-none"
+                    [ngClass]="{
+                      'border-red-300 bg-red-50/60': latitud.invalid && latitud.touched,
+                      'border-[#CECECE]': !(latitud.invalid && latitud.touched)
+                    }"
+                  >
+                </div>
+
+                <div>
+                  <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.08em] text-gray-500">
+                    Longitud
+                  </label>
+
+                  <input
+                    type="number"
+                    step="any"
+                    formControlName="longitud"
+                    readonly
+                    placeholder="Selecciona en mapa"
+                    class="h-11 w-full rounded-[3px] border bg-[#F5F5F5] px-3 text-sm text-gray-700 outline-none"
+                    [ngClass]="{
+                      'border-red-300 bg-red-50/60': longitud.invalid && longitud.touched,
+                      'border-[#CECECE]': !(longitud.invalid && longitud.touched)
+                    }"
+                  >
+                </div>
+              </div>
+
+              <p *ngIf="(latitud.invalid && latitud.touched) || (longitud.invalid && longitud.touched)" class="text-[12px] text-[#9B1A1A]">
+                Debes seleccionar una ubicación válida en el mapa antes de guardar.
+              </p>
+
+            </div>
+          </section>
+
+          <section class="mb-5 rounded-[4px] border border-[#EBEBEB] bg-white">
+            <div class="border-b border-[#EBEBEB] px-4 py-3">
+              <h4 class="text-[12px] font-bold uppercase tracking-wide text-gray-900">
+                3. Confirmación
+              </h4>
+              <p class="mt-0.5 text-[11px] leading-5 text-gray-400">
+                Revisa la acción antes de guardar.
+              </p>
+            </div>
+
+            <div class="px-4 py-4">
+              <div
+                *ngIf="modoFormulario === 'CREAR'"
+                class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3"
+              >
+                <h4 class="text-[13px] font-bold text-[#7A1A1A]">
+                  Inventario automático
+                </h4>
+                <p class="mt-1 text-[12px] leading-5 text-[#7A1A1A]">
+                  Al registrar el hospital, el sistema creará automáticamente su banco sanguíneo inicializado en 0 litros para cada tipo de sangre.
+                </p>
+              </div>
+
+              <div
+                *ngIf="modoFormulario === 'EDITAR'"
+                class="border-l-[3px] border-l-[#9B1A1A] bg-[#FAFAFA] px-4 py-3"
+              >
+                <h4 class="text-[13px] font-bold text-gray-900">
+                  Edición de datos
+                </h4>
+                <p class="mt-1 text-[12px] leading-5 text-gray-500">
+                  Se actualizarán los datos generales y la ubicación del hospital. El inventario sanguíneo existente no será reiniciado.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <div class="sticky bottom-0 -mx-5 border-t border-[#EBEBEB] bg-white/95 px-5 py-4 backdrop-blur">
+            <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                (click)="cancelarFormulario()"
+                class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[12px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="submit"
+                [disabled]="hospitalForm.invalid || isSaving"
+                class="flex h-10 items-center justify-center gap-2 rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515] disabled:cursor-not-allowed disabled:bg-[#C9A0A0]"
+              >
+                <span *ngIf="!isSaving">
+                  {{ textoBotonGuardar }}
+                </span>
+
+                <span *ngIf="isSaving" class="flex items-center gap-2">
+                  <span class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                  Procesando
+                </span>
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </aside>
+
+      <section class="min-w-0 rounded-[4px] border border-[#DADADA] bg-white">
+
+        <div class="flex flex-col gap-3 border-b border-[#EBEBEB] px-5 py-4 xl:flex-row xl:items-center xl:justify-between">
+
+          <div>
+            <h1 class="text-[14px] font-bold uppercase tracking-wide text-gray-900">
+              Hospitales registrados
+            </h1>
+            <p class="mt-0.5 text-[12px] text-gray-400">
+              {{ hospitalesFiltrados.length }} hospitales encontrados
+            </p>
+          </div>
+
+          <div class="grid gap-2 sm:grid-cols-[1fr_auto] xl:w-[470px]">
+            <input
+              type="text"
+              [(ngModel)]="busqueda"
+              placeholder="Buscar hospital, dirección o coordenadas"
+              class="h-10 w-full rounded-[3px] border border-[#CECECE] bg-[#FAFAFA] px-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[3px] focus:ring-[#9B1A1A]/10"
+            >
+
+            <button
+              type="button"
+              (click)="limpiarBusqueda()"
+              class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+            >
+              Limpiar
+            </button>
+          </div>
+
+        </div>
+
+        <div
+          *ngIf="errorMessage"
+          class="m-5 border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3"
+        >
+          <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+            Ocurrió un problema
+          </h2>
+          <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+            {{ errorMessage }}
+          </p>
+        </div>
+
+        <div
+          *ngIf="successMessage"
+          class="m-5 border-l-[3px] border-l-green-700 bg-green-50 px-4 py-3"
+        >
+          <p class="text-[13px] font-bold text-green-800">
+            {{ successMessage }}
+          </p>
+        </div>
+
+        <div *ngIf="isLoading" class="px-5 py-8">
+          <p class="text-[13px] font-bold uppercase tracking-wide text-gray-500">
+            Cargando hospitales...
+          </p>
+        </div>
+
+        <div
+          *ngIf="!isLoading && hospitalesFiltrados.length > 0; else sinHospitales"
+          class="divide-y divide-[#EBEBEB]"
+        >
+
+          <article
+            *ngFor="let hospital of hospitalesFiltrados; trackBy: trackByHospital"
+            class="px-4 py-4 transition hover:bg-[#FAFAFA] sm:px-5"
+          >
+
+            <div class="grid gap-4 xl:grid-cols-[1fr_180px_210px] xl:items-center">
+
+              <div class="min-w-0">
+                <div class="mb-2 flex flex-wrap items-center gap-2">
+                  <span class="rounded-[3px] bg-[#9B1A1A] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                    Hospital #{{ hospital.nro_hospital }}
+                  </span>
+
+                  <span class="rounded-[3px] border border-green-200 bg-green-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-green-700">
+                    Inventario inicializado
+                  </span>
+                </div>
+
+                <h2 class="text-[14px] font-bold leading-snug text-gray-900">
+                  {{ hospital.nombre_hospital }}
+                </h2>
+
+                <p class="mt-1 text-[13px] leading-6 text-gray-600">
+                  {{ hospital.direccion }}
+                </p>
+
+                <p class="mt-1 text-[11px] uppercase tracking-wide text-gray-400">
+                  Registro: {{ formatearFecha(hospital.fecha_creacion) }}
+                </p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 xl:block">
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Latitud
+                  </p>
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
+                    {{ hospital.latitud }}
+                  </p>
+                </div>
+
+                <div class="xl:mt-3">
+                  <p class="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+                    Longitud
+                  </p>
+                  <p class="mt-1 break-words text-[13px] font-bold text-gray-900">
+                    {{ hospital.longitud }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap xl:justify-end">
+
+                <button
+                  type="button"
+                  (click)="abrirMapaHospital(hospital)"
+                  class="h-9 rounded-[3px] bg-[#9B1A1A] px-3 text-[11px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+                >
+                  Mapa
+                </button>
+
+                <button
+                  type="button"
+                  (click)="copiarCoordenadas(hospital)"
+                  class="h-9 rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+                >
+                  Copiar
+                </button>
+
+                <button
+                  *ngIf="esAdministrador"
+                  type="button"
+                  (click)="abrirEditar(hospital)"
+                  class="h-9 rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+                >
+                  Editar
+                </button>
+
+                <button
+                  *ngIf="esAdministrador"
+                  type="button"
+                  (click)="eliminarHospital(hospital)"
+                  [disabled]="isDeleting"
+                  class="h-9 rounded-[3px] border border-red-200 bg-red-50 px-3 text-[11px] font-bold uppercase tracking-wide text-red-700 transition hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Eliminar
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+
+        </div>
+
+        <ng-template #sinHospitales>
+          <div *ngIf="!isLoading" class="p-5">
+            <div class="border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-4 py-3">
+              <h2 class="text-[14px] font-bold text-[#7A1A1A]">
+                No hay hospitales para mostrar
+              </h2>
+              <p class="mt-1 text-[13px] leading-5 text-[#7A1A1A]">
+                Ajusta la búsqueda o registra un nuevo hospital.
+              </p>
+            </div>
+          </div>
+        </ng-template>
+
+      </section>
+
+    </section>
+
+    <p class="mt-5 text-center text-[11px] tracking-wide text-gray-400">
+      Proyecto académico · Ingeniería de la Calidad
+    </p>
+
+  </div>
+
+</main>

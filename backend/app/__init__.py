@@ -26,7 +26,7 @@ def create_app() -> FastAPI:
     app.include_router(profile_routes.router,prefix='/api/profile')
     app.include_router(usuario_routes.router,prefix='/api/users')
     app.include_router(notificaciones_routes.router,prefix='/api/notif')
-    app.include_router(hospital_routes.router,prefix='/api/hospital')
+    app.include_router(hospital_routes.router,prefix='/api/hospitales')
     app.include_router(emergencias_routes.router,prefix='/api/emergencias')
 
     return app
