@@ -1,14 +1,16 @@
 import { Routes } from '@angular/router';
 
-//COMPONENTES
+// COMPONENTES
 import { LoginComponent } from './pages/login/login';
 import { HomeComponent } from './pages/home/home';
 import { PerfilComponent } from './pages/perfil/perfil';
 import { EmergenciasListaComponent } from './pages/emergencias/emergencias-lista/emergencias-lista';
 import { EmergenciasMapaComponent } from './pages/emergencias/emergencias-mapa/emergencias-mapa';
+import { NotificacionesComponent } from './pages/notificaciones/notificaciones/notificaciones';
+import { HospitalesComponent } from './pages/hospitales/hospitales';
 
 //LAYOUTS
-// import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout';
+import { PrivateLayoutComponent } from './layouts/private-layout/private-layout';
 
 //GUARDS
 import { publicGuard } from './guards/public-guard';
@@ -16,12 +18,14 @@ import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
 
-  // RUTAS PÚBLICAS
+  //RUTA INICIAL
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
+
+  //RUTAS PÚBLICAS
   {
     path: 'login',
     component: LoginComponent,
@@ -36,69 +40,51 @@ export const routes: Routes = [
   },
   */
 
-  // RUTAS PRIVADAS SIN SIDEBAR
-  {
-    path: 'home',
-    component: HomeComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path:'perfil',
-    component:PerfilComponent,
-    canActivate: [authGuard]
-  },
-
-  {
-    path:'emergencias',
-    component:EmergenciasListaComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path:'emergencias/mapa',
-    component:EmergenciasMapaComponent,
-    canActivate: [authGuard]
-  },
-
-
-  /*
-  {
-    path: 'perfil',
-    component: PerfilComponent,
-    canActivate: [authGuard]
-  },
-  */
-
-  /*
-  RUTAS PRIVADAS CON SIDEBAR
+  //RUTAS PRIVADAS CON LAYOUT GLOBAL
   {
     path: '',
-    component: AdminLayoutComponent,
+    component: PrivateLayoutComponent,
     canActivate: [authGuard],
     children: [
       {
-        path: 'donantes',
-        component: ListaDonantesComponent
+        path: 'home',
+        component: HomeComponent
       },
       {
-        path: 'solicitudes',
-        component: ListaSolicitudesComponent
+        path: 'perfil',
+        component: PerfilComponent
       },
       {
-        path: 'emparejamientos',
-        component: EmparejamientosComponent
+        path: 'emergencias',
+        component: EmergenciasListaComponent
+      },
+      {
+        path: 'emergencias/mapa',
+        component: EmergenciasMapaComponent
       },
       {
         path: 'notificaciones',
         component: NotificacionesComponent
       },
       {
-        path: 'reportes',
-        component: ReportesComponent
+        path: 'hospitales',
+        component: HospitalesComponent
+      },
+
+      /*
+      Más adelante puedes agregar aquí:
+      {
+        path: 'usuarios',
+        component: UsuariosComponent
+      },
+      
+      {
+        path: 'notificaciones',
+        component: NotificacionesComponent
       }
+      */
     ]
   },
-  */
 
   //FALLBACK
   {
