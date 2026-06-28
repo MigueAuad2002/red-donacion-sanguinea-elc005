@@ -1,0 +1,393 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-2 py-3 sm:px-5 lg:px-8">
+
+  <div class="mx-auto w-full max-w-7xl">
+
+    <nav class="mb-3 flex items-center justify-between gap-3 border-b border-[#D5D5D5] pb-3 sm:mb-5 sm:pb-5">
+
+      <button
+        type="button"
+        (click)="volverPerfil()"
+        class="flex min-w-0 items-center gap-2 text-left sm:gap-3"
+      >
+        <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A] sm:h-10 sm:w-10">
+          <svg class="h-4 w-4 fill-white sm:h-5 sm:w-5" viewBox="0 0 24 24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+          </svg>
+        </div>
+
+        <div class="min-w-0">
+          <strong class="block truncate text-[12px] font-bold uppercase leading-snug text-gray-900 sm:text-[14px]">
+            Compatibilidad sanguínea
+          </strong>
+          <span class="hidden truncate text-[11px] uppercase tracking-wide text-gray-400 sm:block">
+            Donación y recepción según tu grupo sanguíneo
+          </span>
+        </div>
+      </button>
+
+      <div class="flex flex-shrink-0 gap-2">
+        <button
+          type="button"
+          (click)="volverPerfil()"
+          class="h-9 rounded-[3px] bg-[#9B1A1A] px-3 text-[11px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515] sm:h-10 sm:px-4 sm:text-[12px]"
+        >
+          Perfil
+        </button>
+
+        <button
+          type="button"
+          (click)="volverHome()"
+          class="h-9 rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A] sm:h-10 sm:px-4 sm:text-[12px]"
+        >
+          Home
+        </button>
+      </div>
+
+    </nav>
+
+    <section
+      *ngIf="compatibilidad && grupoUsuario; else sinGrupo"
+      class="grid grid-cols-[42%_1fr] gap-2 sm:gap-4 lg:grid-cols-[0.92fr_1.08fr] lg:gap-5"
+    >
+
+      <!-- LADO IZQUIERDO: VISUAL -->
+      <section class="min-w-0 overflow-hidden rounded-[5px] border border-[#DADADA] bg-white">
+
+        <div class="border-b border-[#EBEBEB] px-2.5 py-2.5 sm:px-5 sm:py-4">
+          <div class="flex items-center justify-between gap-2">
+
+            <div class="min-w-0">
+              <h1 class="truncate text-[11px] font-bold uppercase tracking-wide text-gray-900 sm:text-[14px]">
+                Tu sangre
+              </h1>
+              <p class="hidden text-[12px] leading-5 text-gray-400 sm:block">
+                Toca la bolsa para activar la animación.
+              </p>
+            </div>
+
+            <span class="rounded-[4px] bg-[#FDF2F2] px-2 py-1 text-[11px] font-bold text-[#9B1A1A] sm:px-3 sm:py-1.5 sm:text-[12px]">
+              {{ grupoUsuario }}
+            </span>
+
+          </div>
+        </div>
+
+        <div class="px-2 py-3 sm:px-5 sm:py-5 lg:px-8">
+
+          <button
+            type="button"
+            (click)="activarBolsa()"
+            class="group relative mx-auto flex aspect-square w-full max-w-[185px] items-center justify-center overflow-hidden rounded-[20px] border border-[#E8BFBF] bg-gradient-to-br from-white via-[#FFF7F7] to-[#FDF2F2] shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#9B1A1A]/40 hover:shadow-xl hover:shadow-[#9B1A1A]/10 focus:outline-none focus:ring-[4px] focus:ring-[#9B1A1A]/10 sm:max-w-[310px] sm:rounded-[28px]"
+            [ngClass]="bolsaActiva ? 'scale-[0.985]' : 'scale-100'"
+            aria-label="Activar bolsa de sangre"
+          >
+
+            <div class="absolute -left-10 -top-10 h-28 w-28 rounded-full bg-[#9B1A1A]/10 blur-2xl sm:h-32 sm:w-32"></div>
+            <div class="absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-[#D83A32]/10 blur-2xl sm:h-40 sm:w-40"></div>
+
+            <div
+              class="absolute h-[72%] w-[72%] rounded-full border border-[#9B1A1A]/10 transition duration-500"
+              [ngClass]="bolsaActiva ? 'scale-105 opacity-100' : 'scale-95 opacity-60'"
+            ></div>
+
+            <div
+              class="absolute h-[58%] w-[58%] rounded-full border border-[#9B1A1A]/10 transition duration-500"
+              [ngClass]="bolsaActiva ? 'scale-110 opacity-80' : 'scale-100 opacity-40'"
+            ></div>
+
+            <svg
+              class="relative z-10 h-[84%] w-[84%] transition duration-300 ease-out"
+              [ngClass]="bolsaActiva ? '-rotate-2 scale-[1.03]' : 'rotate-0 scale-100 group-hover:-translate-y-1'"
+              viewBox="0 0 320 380"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+
+              <defs>
+                <linearGradient id="bagShell" x1="76" y1="38" x2="254" y2="350" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FFFFFF"/>
+                  <stop offset="0.48" stop-color="#EEF2FA"/>
+                  <stop offset="1" stop-color="#DDE4F3"/>
+                </linearGradient>
+
+                <linearGradient id="bloodFill" x1="92" y1="125" x2="237" y2="328" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#F0524A"/>
+                  <stop offset="0.5" stop-color="#D83A32"/>
+                  <stop offset="1" stop-color="#9B1A1A"/>
+                </linearGradient>
+
+                <linearGradient id="glassPanel" x1="113" y1="160" x2="214" y2="300" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FFFFFF"/>
+                  <stop offset="1" stop-color="#F1F5FB"/>
+                </linearGradient>
+
+                <filter id="softShadow" x="42" y="20" width="236" height="340" filterUnits="userSpaceOnUse">
+                  <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#9B1A1A" flood-opacity="0.16"/>
+                </filter>
+              </defs>
+
+              <path d="M104 20C104 13.3726 109.373 8 116 8H127C133.627 8 139 13.3726 139 20V76H104V20Z" fill="#E7ECFA"/>
+              <path d="M181 20C181 13.3726 186.373 8 193 8H204C210.627 8 216 13.3726 216 20V76H181V20Z" fill="#E7ECFA"/>
+
+              <path d="M109 76H135L128 108H116L109 76Z" fill="#DCE4F3"/>
+              <path d="M186 76H212L205 108H193L186 76Z" fill="#DCE4F3"/>
+
+              <path
+                filter="url(#softShadow)"
+                d="M75 93C75 84.1634 82.1634 77 91 77H116C124.837 77 132 84.1634 132 93V111C132 126.464 144.536 139 160 139C175.464 139 188 126.464 188 111V93C188 84.1634 195.163 77 204 77H229C237.837 77 245 84.1634 245 93V122C245 132.493 253.507 141 264 141C274.493 141 283 149.507 283 160V295C283 338 228 363 160 363C92 363 37 338 37 295V160C37 149.507 45.5066 141 56 141C66.4934 141 75 132.493 75 122V93Z"
+                fill="url(#bagShell)"
+              />
+
+              <path
+                d="M75 93C75 84.1634 82.1634 77 91 77H116C124.837 77 132 84.1634 132 93V111C132 126.464 144.536 139 160 139C175.464 139 188 126.464 188 111V93C188 84.1634 195.163 77 204 77H229C237.837 77 245 84.1634 245 93V122C245 132.493 253.507 141 264 141C274.493 141 283 149.507 283 160V295C283 338 228 363 160 363C92 363 37 338 37 295V160C37 149.507 45.5066 141 56 141C66.4934 141 75 132.493 75 122V93Z"
+                stroke="#111827"
+                stroke-width="8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M58 163C58 154.716 64.7157 148 73 148H86C107 148 124 131 124 110V93H137V111C137 135.853 157.147 156 182 156H201C225.853 156 246 135.853 246 111V93H259V122C259 143 276 148 276 163V292C276 326 226 347 160 347C94 347 58 326 58 292V163Z"
+                fill="url(#bloodFill)"
+              />
+
+              <path
+                d="M74 164C74 157.373 79.3726 152 86 152H94C117 152 136 133 136 110V94H148V111C148 145 173 169 206 169H215C225 169 233 177 233 187V302C233 326 210 339 176 343V185C176 173.402 166.598 164 155 164H74Z"
+                fill="#FFFFFF"
+                opacity="0.12"
+              />
+
+              <rect
+                x="98"
+                y="174"
+                width="124"
+                height="142"
+                rx="34"
+                fill="url(#glassPanel)"
+                stroke="#111827"
+                stroke-width="8"
+              />
+
+              <path
+                d="M111 202C111 192.059 119.059 184 129 184H184V265C184 287.091 166.091 305 144 305H129C119.059 305 111 296.941 111 287V202Z"
+                fill="white"
+                opacity="0.45"
+              />
+
+              <path
+                d="M160 218C160 218 130 248 130 278C130 302 143.431 317 160 317C176.569 317 190 302 190 278C190 248 160 218 160 218Z"
+                fill="#D83A32"
+                stroke="#111827"
+                stroke-width="8"
+                stroke-linejoin="round"
+              />
+
+              <path
+                d="M160 239C160 239 145 260 145 280C145 296 153 306 160 306C167 306 175 296 175 280C175 260 160 239 160 239Z"
+                fill="#FF6B5F"
+                opacity="0.75"
+              />
+
+              <rect
+                x="121"
+                y="115"
+                width="78"
+                height="34"
+                rx="17"
+                fill="white"
+                opacity="0.92"
+              />
+
+              <text
+                x="160"
+                y="138"
+                text-anchor="middle"
+                font-size="20"
+                font-weight="800"
+                fill="#9B1A1A"
+                font-family="Arial, sans-serif"
+              >
+                {{ grupoUsuario }}
+              </text>
+
+            </svg>
+
+            <div
+              class="pointer-events-none absolute left-1/2 top-[60%] z-20 h-6 w-4 -translate-x-1/2 rounded-b-full rounded-t-[999px] bg-[#D83A32] shadow-lg shadow-[#9B1A1A]/20 transition-all duration-700 ease-out sm:h-7 sm:w-5"
+              [ngClass]="gotaActiva
+                ? 'translate-y-14 scale-100 opacity-100 sm:translate-y-16'
+                : 'translate-y-0 scale-75 opacity-0'"
+            ></div>
+
+          </button>
+
+          <aside class="mt-3 rounded-[5px] border border-[#E8BFBF] bg-[#FDF2F2] px-2.5 py-3 sm:mt-5 sm:px-4 sm:py-4">
+
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#7A1A1A] sm:text-[11px]">
+              Tipo sanguíneo
+            </p>
+
+            <p class="mt-1 text-[32px] font-black leading-none text-[#9B1A1A] sm:mt-2 sm:text-[48px]">
+              {{ grupoUsuario }}
+            </p>
+
+            <p class="mt-2 text-[11px] leading-5 text-[#7A1A1A] sm:mt-3 sm:text-[13px] sm:leading-6">
+              Compatibilidad calculada para glóbulos rojos según ABO y RH.
+            </p>
+
+            <div class="mt-3 grid grid-cols-2 gap-2 sm:mt-4">
+              <div class="rounded-[4px] bg-white px-2 py-2 text-center sm:px-3 sm:py-3">
+                <p class="text-[9px] font-bold uppercase text-gray-400 sm:text-[10px]">
+                  Donas
+                </p>
+                <p class="mt-1 text-[18px] font-bold text-[#9B1A1A] sm:text-[22px]">
+                  {{ compatibilidad.puedeDonarA.length }}
+                </p>
+              </div>
+
+              <div class="rounded-[4px] bg-white px-2 py-2 text-center sm:px-3 sm:py-3">
+                <p class="text-[9px] font-bold uppercase text-gray-400 sm:text-[10px]">
+                  Recibes
+                </p>
+                <p class="mt-1 text-[18px] font-bold text-[#9B1A1A] sm:text-[22px]">
+                  {{ compatibilidad.puedeRecibirDe.length }}
+                </p>
+              </div>
+            </div>
+
+          </aside>
+
+        </div>
+
+      </section>
+
+      <!-- LADO DERECHO: INFO -->
+      <section class="grid min-w-0 gap-2 sm:gap-4 lg:gap-5">
+
+        <article class="overflow-hidden rounded-[5px] border border-[#DADADA] bg-white">
+
+          <div class="border-b border-[#EBEBEB] px-3 py-3 sm:px-5 sm:py-4">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <div class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#9B1A1A] text-[13px] font-bold text-white sm:h-11 sm:w-11 sm:text-[16px]">
+                {{ obtenerInicial() }}
+              </div>
+
+              <div class="min-w-0">
+                <h2 class="truncate text-[12px] font-bold uppercase tracking-wide text-gray-900 sm:text-[14px]">
+                  {{ obtenerNombre() }}
+                </h2>
+                <p class="truncate text-[10px] font-bold uppercase tracking-wide text-gray-400 sm:text-[11px]">
+                  {{ obtenerRol() }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-4 xl:grid-cols-8">
+            <div
+              *ngFor="let grupo of gruposSanguineos; trackBy: trackByGrupo"
+              class="border-b border-r border-[#EBEBEB] px-1.5 py-2 text-center sm:px-3 sm:py-3"
+              [ngClass]="claseGrupoBase(grupo)"
+            >
+              <p class="text-[11px] font-black sm:text-[15px]">
+                {{ grupo }}
+              </p>
+            </div>
+          </div>
+
+        </article>
+
+        <article class="overflow-hidden rounded-[5px] border border-[#DADADA] bg-white">
+
+          <div class="border-b border-[#EBEBEB] px-3 py-3 sm:px-5 sm:py-4">
+            <h2 class="text-[12px] font-bold uppercase tracking-wide text-gray-900 sm:text-[13px]">
+              Puedes donar a
+            </h2>
+            <p class="mt-0.5 text-[10px] leading-4 text-gray-400 sm:text-[12px] sm:leading-5">
+              {{ compatibilidad.resumenDonacion }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-1.5 px-2.5 py-3 sm:grid-cols-8 sm:gap-2 sm:px-4 sm:py-4 lg:grid-cols-4 xl:grid-cols-8">
+            <div
+              *ngFor="let grupo of gruposSanguineos; trackBy: trackByGrupo"
+              class="rounded-[4px] border px-1.5 py-2 text-center transition sm:px-2 sm:py-3"
+              [ngClass]="claseChipCompatible(esDonacionCompatible(grupo))"
+            >
+              <p class="text-[11px] font-black sm:text-[13px]">
+                {{ grupo }}
+              </p>
+            </div>
+          </div>
+
+        </article>
+
+        <article class="overflow-hidden rounded-[5px] border border-[#DADADA] bg-white">
+
+          <div class="border-b border-[#EBEBEB] px-3 py-3 sm:px-5 sm:py-4">
+            <h2 class="text-[12px] font-bold uppercase tracking-wide text-gray-900 sm:text-[13px]">
+              Puedes recibir de
+            </h2>
+            <p class="mt-0.5 text-[10px] leading-4 text-gray-400 sm:text-[12px] sm:leading-5">
+              {{ compatibilidad.resumenRecepcion }}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-1.5 px-2.5 py-3 sm:grid-cols-8 sm:gap-2 sm:px-4 sm:py-4 lg:grid-cols-4 xl:grid-cols-8">
+            <div
+              *ngFor="let grupo of gruposSanguineos; trackBy: trackByGrupo"
+              class="rounded-[4px] border px-1.5 py-2 text-center transition sm:px-2 sm:py-3"
+              [ngClass]="claseChipCompatible(esRecepcionCompatible(grupo))"
+            >
+              <p class="text-[11px] font-black sm:text-[13px]">
+                {{ grupo }}
+              </p>
+            </div>
+          </div>
+
+        </article>
+
+        <article class="rounded-[5px] border border-[#DADADA] bg-[#FAFAFA] px-3 py-3 sm:px-5 sm:py-4">
+
+          <h2 class="text-[11px] font-bold uppercase tracking-wide text-gray-900 sm:text-[13px]">
+            Nota importante
+          </h2>
+
+          <p class="mt-1 text-[10px] leading-5 text-gray-500 sm:mt-2 sm:text-[12px] sm:leading-6">
+            Esta información es una guía general. En una emergencia real, la compatibilidad debe ser confirmada por personal médico mediante pruebas clínicas.
+          </p>
+
+        </article>
+
+      </section>
+
+    </section>
+
+    <p class="mt-4 text-center text-[10px] tracking-wide text-gray-400 sm:mt-5 sm:text-[11px]">
+      Proyecto académico · Ingeniería de la Calidad
+    </p>
+
+  </div>
+
+</main>
+
+<ng-template #sinGrupo>
+  <main class="min-h-dvh bg-[#EBEBEB] px-4 py-6">
+    <div class="mx-auto max-w-3xl rounded-[5px] border border-[#DADADA] bg-white px-5 py-5">
+      <h1 class="text-[15px] font-bold uppercase tracking-wide text-gray-900">
+        No se pudo calcular la compatibilidad
+      </h1>
+
+      <p class="mt-2 text-[13px] leading-6 text-gray-500">
+        Tu usuario no tiene un tipo sanguíneo válido registrado. Vuelve al perfil para revisar tus datos.
+      </p>
+
+      <button
+        type="button"
+        (click)="volverPerfil()"
+        class="mt-5 h-10 rounded-[3px] bg-[#9B1A1A] px-4 text-[12px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515]"
+      >
+        Volver al perfil
+      </button>
+    </div>
+  </main>
+</ng-template>

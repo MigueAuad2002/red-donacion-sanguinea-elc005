@@ -158,6 +158,10 @@ export class PerfilComponent implements OnInit {
       });
   }
 
+  irCompatibilidadSanguinea(): void {
+    this.router.navigate(['/compatibilidad-sanguinea']);
+  }
+
   volverHome(): void {
     this.router.navigate(['/home']);
   }
