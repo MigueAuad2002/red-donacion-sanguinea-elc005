@@ -8,6 +8,8 @@ import { EmergenciasListaComponent } from './pages/emergencias/emergencias-lista
 import { EmergenciasMapaComponent } from './pages/emergencias/emergencias-mapa/emergencias-mapa';
 import { NotificacionesComponent } from './pages/notificaciones/notificaciones/notificaciones';
 import { HospitalesComponent } from './pages/hospitales/hospitales';
+import { UsersComponent } from './pages/users/users';
+// import { PerfilComponent } from './pages/perfil/perfil';
 
 //LAYOUTS
 import { PrivateLayoutComponent } from './layouts/private-layout/private-layout';
@@ -31,7 +33,7 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [publicGuard]
   },
-
+ 
   /*
   {
     path: 'register',
@@ -70,6 +72,11 @@ export const routes: Routes = [
         path: 'hospitales',
         component: HospitalesComponent
       },
+      {
+
+        path: 'usuarios',
+        component: UsersComponent
+      }
 
       /*
       Más adelante puedes agregar aquí:
