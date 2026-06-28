@@ -64,7 +64,7 @@ export class PerfilComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          console.log('Perfil recibido:', res);
+          //console.log('Perfil recibido:', res);
 
           if (!res || res.success !== true || !res.perfil) {
             this.errorMessage = res?.message || 'No se pudo cargar el perfil.';

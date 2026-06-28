@@ -2,9 +2,6 @@ from app.classes.socketmanager import manager
 from app.repos import notificaciones_repos
 
 def _get_donantes_compatibles(tipo_receptor: str, rh_receptor: str):
-    """
-    Algoritmo de Matching: Determina qué donantes pueden darle sangre a un receptor específico.
-    """
     compatibilidad = {
         'O-': [('O', '-')],
         'O+': [('O', '+'), ('O', '-')],
@@ -20,28 +17,29 @@ def _get_donantes_compatibles(tipo_receptor: str, rh_receptor: str):
     return compatibilidad.get(llave, [])
 
 async def procesar_alerta_emergencia(data_emergencia: dict):
-    # 1. Extracción de datos del requerimiento médico
     hospital = data_emergencia.get('hospital', 'un hospital de la red')
     tipo_receptor = data_emergencia.get('tipo_sangre')
     rh_receptor = data_emergencia.get('factor_rh')
     nro_emergencia = data_emergencia.get('nro_emergencia')
+    nro_receptor = data_emergencia.get('nro_usuario_receptor') # EXTRAEMOS AL RECEPTOR
 
     if not tipo_receptor or not rh_receptor:
         raise ValueError("Se requiere el tipo de sangre y factor RH del receptor para el emparejamiento.")
 
-    # 2. Matching Biológico (Identificamos a quién buscar en la BD)
     tuplas_compatibles = _get_donantes_compatibles(tipo_receptor, rh_receptor)
     usuarios_ids = notificaciones_repos.obtener_usuarios_compatibles(tuplas_compatibles)
 
+    # REGLA DE CALIDAD: Eliminar al creador de la emergencia si es compatible consigo mismo
+    if nro_receptor in usuarios_ids:
+        usuarios_ids.remove(nro_receptor)
+
     titulo = "🩸 ¡Emergencia Médica Compatibilidad Confirmada!"
-    cuerpo = f"Se tiene una emergencia para un paciente, la donacion sera en el {hospital}, se requiere urgentemente donantes para un paciente {tipo_receptor}{rh_receptor}. Tú eres compatible."
+    cuerpo = f"Se tiene una emergencia para un paciente, la donación será en el {hospital}, se requiere urgentemente donantes para un paciente {tipo_receptor}{rh_receptor}. Tú eres compatible."
 
     notificados_online = 0
     guardados_bd = 0
 
-    # 3. Guardado Físico y Envío Push a la sala del usuario
     for nro_usuario in usuarios_ids:
-        # A) Insertar en BD para trazabilidad
         id_noti = notificaciones_repos.guardar_notificacion(
             titulo=titulo, 
             cuerpo=cuerpo, 
@@ -52,8 +50,6 @@ async def procesar_alerta_emergencia(data_emergencia: dict):
 
         if id_noti:
             guardados_bd += 1
-            
-            # B) Empujar por el túnel si el usuario tiene la app abierta
             if nro_usuario in manager.active_connections:
                 mensaje_push = {
                     "id_notificacion": id_noti,
