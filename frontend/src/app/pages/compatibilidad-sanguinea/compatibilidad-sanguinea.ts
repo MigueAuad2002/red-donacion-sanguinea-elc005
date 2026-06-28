@@ -18,7 +18,56 @@ interface CompatibilidadInfo {
   selector: 'app-compatibilidad-sanguinea',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './compatibilidad-sanguinea.html'
+  templateUrl: './compatibilidad-sanguinea.html',
+  styles: [`
+    /* ── Flotación idle ───────────────────────────────────────────── */
+    .bolsa-flotando {
+      animation: bolsaFlotar 4.8s ease-in-out infinite;
+      will-change: transform;
+    }
+    .bolsa-flotando.bolsa-bounce {
+      animation: bolsaBounce 0.48s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+    @keyframes bolsaFlotar {
+      0%, 100% { transform: translateY(0px)   rotate(0deg); }
+      50%       { transform: translateY(-9px) rotate(0.35deg); }
+    }
+    @keyframes bolsaBounce {
+      0%   { transform: translateY(0px)  scale(1);    }
+      22%  { transform: translateY(-7px) scale(1.04); }
+      52%  { transform: translateY(2px)  scale(0.97); }
+      78%  { transform: translateY(-2px) scale(1.01); }
+      100% { transform: translateY(0px)  scale(1);    }
+    }
+
+    /* ── Anillo expansivo al hacer click ──────────────────────────── */
+    .anillo-click {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+    .anillo-click.activo {
+      animation: anilloExpandir 0.68s ease-out forwards;
+    }
+    @keyframes anilloExpandir {
+      0%   { opacity: 0.75; transform: scale(0.88); }
+      100% { opacity: 0;    transform: scale(1.52); }
+    }
+
+    /* ── Gotas (3 escalonadas) ────────────────────────────────────── */
+    .gota-s {
+      opacity: 0;
+      transform: translateY(0px) scaleX(1) scaleY(1);
+    }
+    .gota-s.cayendo {
+      animation: gotaDrip 0.88s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+    @keyframes gotaDrip {
+      0%  { opacity: 1;   transform: translateY(0px)  scaleY(1)    scaleX(1);   }
+      60% { opacity: 0.9; transform: translateY(44px) scaleY(1.08) scaleX(0.88);}
+      84% { opacity: 0.6; transform: translateY(56px) scaleY(0.55) scaleX(1.55);}
+      100%{ opacity: 0;   transform: translateY(61px) scaleY(0.1)  scaleX(2.2); }
+    }
+  `]
 })
 export class CompatibilidadSanguineaComponent implements OnInit {
   private authService = inject(AuthService);
@@ -31,18 +80,16 @@ export class CompatibilidadSanguineaComponent implements OnInit {
   grupoUsuario: GrupoSanguineo | null = null;
   compatibilidad: CompatibilidadInfo | null = null;
 
-  gotaActiva = false;
-  bolsaActiva = false;
+  /* ── Estado animaciones ──────────────────────────────────────── */
+  gotaActiva  = false;
+  gotaActiva2 = false;
+  gotaActiva3 = false;
+  bolsaActiva  = false;   // rebote
+  anilloActivo = false;   // anillo expansivo
+  private activando = false;
 
   gruposSanguineos: GrupoSanguineo[] = [
-    'O-',
-    'O+',
-    'A-',
-    'A+',
-    'B-',
-    'B+',
-    'AB-',
-    'AB+'
+    'O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'
   ];
 
   private reglasCompatibilidad: Record<GrupoSanguineo, CompatibilidadInfo> = {
@@ -128,24 +175,48 @@ export class CompatibilidadSanguineaComponent implements OnInit {
   }
 
   activarBolsa(): void {
-    this.bolsaActiva = true;
-    this.gotaActiva = true;
+    if (this.activando) return;
+    this.activando = true;
 
-    setTimeout(() => {
-      this.ngZone.run(() => {
-        this.gotaActiva = false;
-        this.cdr.detectChanges();
-      });
-    }, 800);
-
-    setTimeout(() => {
-      this.ngZone.run(() => {
-        this.bolsaActiva = false;
-        this.cdr.detectChanges();
-      });
-    }, 420);
-
+    this.bolsaActiva  = true;
+    this.anilloActivo = true;
+    this.gotaActiva   = true;
     this.cdr.detectChanges();
+
+    // Gota 2 y 3 escalonadas
+    setTimeout(() => this.ngZone.run(() => {
+      this.gotaActiva2 = true;
+      this.cdr.detectChanges();
+    }), 195);
+
+    setTimeout(() => this.ngZone.run(() => {
+      this.gotaActiva3 = true;
+      this.cdr.detectChanges();
+    }), 375);
+
+    // Termina rebote + anillo
+    setTimeout(() => this.ngZone.run(() => {
+      this.bolsaActiva  = false;
+      this.anilloActivo = false;
+      this.cdr.detectChanges();
+    }), 500);
+
+    // Reset gotas
+    setTimeout(() => this.ngZone.run(() => {
+      this.gotaActiva = false;
+      this.cdr.detectChanges();
+    }), 890);
+
+    setTimeout(() => this.ngZone.run(() => {
+      this.gotaActiva2 = false;
+      this.cdr.detectChanges();
+    }), 1075);
+
+    setTimeout(() => this.ngZone.run(() => {
+      this.gotaActiva3  = false;
+      this.activando    = false;
+      this.cdr.detectChanges();
+    }), 1240);
   }
 
   volverPerfil(): void {
@@ -168,7 +239,6 @@ export class CompatibilidadSanguineaComponent implements OnInit {
     if (grupo === this.grupoUsuario) {
       return 'border-[#9B1A1A] bg-[#9B1A1A] text-white shadow-sm';
     }
-
     return 'border-[#DADADA] bg-white text-gray-700';
   }
 
@@ -199,7 +269,7 @@ export class CompatibilidadSanguineaComponent implements OnInit {
     rh: string | null | undefined
   ): GrupoSanguineo | null {
     const tipoNormalizado = String(tipo || '').trim().toUpperCase();
-    const rhNormalizado = String(rh || '').trim();
+    const rhNormalizado   = String(rh  || '').trim();
 
     const grupo = `${tipoNormalizado}${rhNormalizado}` as GrupoSanguineo;
 
