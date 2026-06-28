@@ -3,6 +3,24 @@ from app.services import usuario_services
 
 router = APIRouter(tags=["USUARIOS"])
 
+@router.post('/register_usuario')
+def crear_usuarios(data: dict = Body(...)):
+    if not data:
+        raise HTTPException(
+            status_code=400,
+            detail='El cuerpo de la petición está vacío o no es un JSON válido.'
+        )
+    
+    try:
+        result = usuario_services.registrar_usuario(data)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {str(e)}")
+
+
 # 🔹 LISTAR TODOS LOS USUARIOS
 @router.get("/")
 def listar_usuarios():
@@ -22,14 +40,6 @@ def obtener_usuario(id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# 🔹 CREAR USUARIO
-@router.post("/")
-def crear_usuario(data: dict = Body(...)):
-    try:
-        return usuario_services.crear_usuario(data)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 # 🔹 ACTUALIZAR USUARIO

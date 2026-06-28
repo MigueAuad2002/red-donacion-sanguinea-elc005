@@ -3,6 +3,9 @@ import { Routes } from '@angular/router';
 //COMPONENTES
 import { LoginComponent } from './pages/login/login';
 import { HomeComponent } from './pages/home/home';
+import { PerfilComponent } from './pages/perfil/perfil';
+import { EmergenciasListaComponent } from './pages/emergencias/emergencias-lista/emergencias-lista';
+import { EmergenciasMapaComponent } from './pages/emergencias/emergencias-mapa/emergencias-mapa';
 import { UsersComponent } from './pages/users/users';
 // import { PerfilComponent } from './pages/perfil/perfil';
 
@@ -41,14 +44,30 @@ export const routes: Routes = [
     component: HomeComponent,
     canActivate: [authGuard]
   },
-   {
+  {
     path: 'usuarios',
-  component: UsersComponent,
-  canActivate: [authGuard]
+    component: UsersComponent,
+    canActivate: [authGuard]
+  },
+
+  {
+    path:'perfil',
+    component:PerfilComponent,
+    canActivate: [authGuard]
+  },
+
+  {
+    path:'emergencias',
+    component:EmergenciasListaComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path:'emergencias/mapa',
+    component:EmergenciasMapaComponent,
+    canActivate: [authGuard]
   },
 
   /*
-
   {
     path: 'perfil',
     component: PerfilComponent,
