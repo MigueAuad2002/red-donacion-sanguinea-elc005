@@ -14,11 +14,33 @@ export interface UsuarioSesion {
   nombre_rol: string;
 }
 
+export interface LoginRequest {
+  ci: string;
+  password: string;
+}
+
 export interface LoginResponse {
   success: boolean;
   message: string;
   usuario: UsuarioSesion;
   token: string;
+}
+
+export interface RegisterRequest {
+  nombre_completo: string;
+  password: string;
+  ci: string;
+  fecha_nacimiento: string;
+  genero: string;
+  telefono?: string | null;
+  correo?: string | null;
+  id_sangre: number;
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  nro_usuario: number;
 }
 
 @Injectable({
@@ -31,12 +53,12 @@ export class AuthService {
   private baseUrl = environment.apiUrl.replace(/\/$/, '');
   private apiUrl = `${this.baseUrl}/auth`;
 
-  login(credentials: any): Observable<LoginResponse> {
+  login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
-  register(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, userData);
+  register(userData: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, userData);
   }
 
   guardarSesion(token: string, usuario: UsuarioSesion): void {

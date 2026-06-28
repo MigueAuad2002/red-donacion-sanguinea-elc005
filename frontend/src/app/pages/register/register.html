@@ -1,0 +1,389 @@
+<main class="min-h-dvh bg-[#EBEBEB] px-3 py-3 sm:px-5 lg:px-8">
+
+  <div class="mx-auto flex min-h-[calc(100dvh-1.5rem)] w-full max-w-6xl items-center">
+
+    <section class="w-full overflow-hidden rounded-[5px] border border-[#DADADA] bg-white shadow-sm">
+
+      <!-- Header compacto -->
+      <div class="border-b border-[#EBEBEB] bg-white px-4 py-3 sm:px-5 lg:px-6">
+
+        <div class="flex items-center justify-between gap-3">
+
+          <div class="flex min-w-0 items-center gap-3">
+
+            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[6px] bg-[#9B1A1A]">
+              <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              </svg>
+            </div>
+
+            <div class="min-w-0">
+              <h1 class="truncate text-[14px] font-bold uppercase tracking-wide text-gray-900 sm:text-[15px]">
+                Crear cuenta
+              </h1>
+              <p class="truncate text-[11px] text-gray-400 sm:text-[12px]">
+                Registro ciudadano · Donaciones de sangre
+              </p>
+            </div>
+
+          </div>
+
+          <button
+            type="button"
+            (click)="irLogin()"
+            class="h-9 flex-shrink-0 rounded-[3px] border border-[#CECECE] bg-white px-3 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A] sm:h-10 sm:px-4 sm:text-[12px]"
+          >
+            Login
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Mini guía horizontal -->
+      <div class="border-b border-[#EBEBEB] bg-[#FAFAFA] px-3 py-2 sm:px-5 lg:px-6">
+
+        <div class="grid grid-cols-3 gap-2">
+
+          <div class="rounded-[3px] border border-[#EBEBEB] bg-white px-2 py-2 text-center">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+              1. Datos
+            </p>
+          </div>
+
+          <div class="rounded-[3px] border border-[#EBEBEB] bg-white px-2 py-2 text-center">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+              2. Sangre
+            </p>
+          </div>
+
+          <div class="rounded-[3px] border border-[#EBEBEB] bg-white px-2 py-2 text-center">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[#9B1A1A]">
+              3. Acceso
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Body compacto -->
+      <div class="px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
+
+        <div
+          *ngIf="errorMessage"
+          class="mb-3 border-l-[3px] border-l-[#9B1A1A] bg-[#FDF2F2] px-3 py-2"
+        >
+          <p class="text-[12px] leading-5 text-[#7A1A1A]">
+            {{ errorMessage }}
+          </p>
+        </div>
+
+        <div
+          *ngIf="successMessage"
+          class="mb-3 border-l-[3px] border-l-green-700 bg-green-50 px-3 py-2"
+        >
+          <p class="text-[12px] leading-5 text-green-800">
+            {{ successMessage }} Redirigiendo al inicio de sesión...
+          </p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="registrarUsuario()" class="space-y-3">
+
+          <!-- Matriz principal -->
+          <div class="rounded-[4px] border border-[#EBEBEB] bg-white">
+
+            <div class="border-b border-[#EBEBEB] px-3 py-2 sm:px-4">
+              <h2 class="text-[11px] font-bold uppercase tracking-wide text-gray-900">
+                Información de registro
+              </h2>
+              <p class="text-[10px] leading-4 text-gray-400">
+                Los campos principales son obligatorios.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 px-3 py-3 sm:gap-3 sm:px-4 lg:grid-cols-4">
+
+              <!-- Nombre completo -->
+              <div class="col-span-2 lg:col-span-2">
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Nombre completo
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="nombre_completo"
+                  placeholder="Nombre completo"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': nombreCompleto.invalid && nombreCompleto.touched,
+                    'border-[#CECECE]': !(nombreCompleto.invalid && nombreCompleto.touched)
+                  }"
+                >
+
+                <p *ngIf="nombreCompleto.invalid && nombreCompleto.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  {{ nombreCompletoError }}
+                </p>
+              </div>
+
+              <!-- CI -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  CI
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="ci"
+                  placeholder="CI"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': ci.invalid && ci.touched,
+                    'border-[#CECECE]': !(ci.invalid && ci.touched)
+                  }"
+                >
+
+                <p *ngIf="ci.invalid && ci.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  {{ ciError }}
+                </p>
+              </div>
+
+              <!-- Fecha nacimiento -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Nacimiento
+                </label>
+
+                <input
+                  type="date"
+                  formControlName="fecha_nacimiento"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2 text-[12px] text-gray-900 outline-none transition focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': fechaNacimiento.invalid && fechaNacimiento.touched,
+                    'border-[#CECECE]': !(fechaNacimiento.invalid && fechaNacimiento.touched)
+                  }"
+                >
+
+                <p *ngIf="fechaNacimiento.invalid && fechaNacimiento.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  Obligatorio.
+                </p>
+              </div>
+
+              <!-- Género -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Género
+                </label>
+
+                <select
+                  formControlName="genero"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2 text-[12px] text-gray-900 outline-none transition focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': genero.invalid && genero.touched,
+                    'border-[#CECECE]': !(genero.invalid && genero.touched)
+                  }"
+                >
+                  <option value="">Elegir</option>
+                  <option value="M">Masculino</option>
+                  <option value="F">Femenino</option>
+                </select>
+
+                <p *ngIf="genero.invalid && genero.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  Obligatorio.
+                </p>
+              </div>
+
+              <!-- Tipo sangre -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Sangre
+                </label>
+
+                <select
+                  formControlName="id_sangre"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2 text-[12px] text-gray-900 outline-none transition focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': idSangre.invalid && idSangre.touched,
+                    'border-[#CECECE]': !(idSangre.invalid && idSangre.touched)
+                  }"
+                >
+                  <option [ngValue]="null">Elegir</option>
+                  <option
+                    *ngFor="let tipo of tiposSangre"
+                    [ngValue]="tipo.id_sangre"
+                  >
+                    {{ tipo.label }}
+                  </option>
+                </select>
+
+                <p *ngIf="idSangre.invalid && idSangre.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  Obligatorio.
+                </p>
+              </div>
+
+              <!-- Teléfono -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Teléfono
+                </label>
+
+                <input
+                  type="text"
+                  formControlName="telefono"
+                  placeholder="70000000"
+                  inputmode="tel"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': telefono.invalid && telefono.touched,
+                    'border-[#CECECE]': !(telefono.invalid && telefono.touched)
+                  }"
+                >
+
+                <p *ngIf="telefono.invalid && telefono.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  {{ telefonoError }}
+                </p>
+              </div>
+
+              <!-- Correo -->
+              <div class="col-span-2 lg:col-span-2">
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Correo
+                </label>
+
+                <input
+                  type="email"
+                  formControlName="correo"
+                  placeholder="correo@ejemplo.com"
+                  class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:text-sm"
+                  [ngClass]="{
+                    'border-red-300 bg-red-50/60': correo.invalid && correo.touched,
+                    'border-[#CECECE]': !(correo.invalid && correo.touched)
+                  }"
+                >
+
+                <p *ngIf="correo.invalid && correo.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  {{ correoError }}
+                </p>
+              </div>
+
+              <!-- Contraseña -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Contraseña
+                </label>
+
+                <div class="relative">
+                  <input
+                    [type]="mostrarPassword ? 'text' : 'password'"
+                    formControlName="password"
+                    placeholder="Mín. 6"
+                    class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 pr-12 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:pr-16 sm:text-sm"
+                    [ngClass]="{
+                      'border-red-300 bg-red-50/60': password.invalid && password.touched,
+                      'border-[#CECECE]': !(password.invalid && password.touched)
+                    }"
+                  >
+
+                  <button
+                    type="button"
+                    (click)="togglePassword()"
+                    class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-[3px] px-1.5 py-1 text-[9px] font-bold uppercase tracking-wide text-gray-500 hover:bg-[#FDF2F2] hover:text-[#9B1A1A] sm:right-2 sm:px-2 sm:text-[10px]"
+                  >
+                    {{ mostrarPassword ? 'Ocultar' : 'Ver' }}
+                  </button>
+                </div>
+
+                <p *ngIf="password.invalid && password.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  {{ passwordError }}
+                </p>
+              </div>
+
+              <!-- Confirmar contraseña -->
+              <div>
+                <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                  Confirmar
+                </label>
+
+                <div class="relative">
+                  <input
+                    [type]="mostrarConfirmarPassword ? 'text' : 'password'"
+                    formControlName="confirmar_password"
+                    placeholder="Repetir"
+                    class="h-10 w-full rounded-[3px] border bg-[#FAFAFA] px-2.5 pr-12 text-[12px] text-gray-900 outline-none transition placeholder:text-gray-300 focus:border-[#9B1A1A] focus:bg-white focus:ring-[2px] focus:ring-[#9B1A1A]/10 sm:px-3 sm:pr-16 sm:text-sm"
+                    [ngClass]="{
+                      'border-red-300 bg-red-50/60': (confirmarPassword.invalid && confirmarPassword.touched) || passwordsNoCoinciden,
+                      'border-[#CECECE]': !((confirmarPassword.invalid && confirmarPassword.touched) || passwordsNoCoinciden)
+                    }"
+                  >
+
+                  <button
+                    type="button"
+                    (click)="toggleConfirmarPassword()"
+                    class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-[3px] px-1.5 py-1 text-[9px] font-bold uppercase tracking-wide text-gray-500 hover:bg-[#FDF2F2] hover:text-[#9B1A1A] sm:right-2 sm:px-2 sm:text-[10px]"
+                  >
+                    {{ mostrarConfirmarPassword ? 'Ocultar' : 'Ver' }}
+                  </button>
+                </div>
+
+                <p *ngIf="confirmarPassword.invalid && confirmarPassword.touched" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  Confirma.
+                </p>
+
+                <p *ngIf="passwordsNoCoinciden" class="mt-1 text-[10px] leading-4 text-[#9B1A1A]">
+                  No coinciden.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Acciones compactas -->
+          <div class="rounded-[4px] border border-[#EBEBEB] bg-[#FAFAFA] px-3 py-3">
+
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+              <p class="text-center text-[10px] leading-4 text-gray-400 sm:text-left sm:text-[11px]">
+                Al crear la cuenta, el sistema asignará el rol ciudadano.
+              </p>
+
+              <div class="grid grid-cols-2 gap-2 sm:flex sm:flex-shrink-0">
+
+                <button
+                  type="button"
+                  (click)="irLogin()"
+                  class="h-10 rounded-[3px] border border-[#CECECE] bg-white px-4 text-[11px] font-bold uppercase tracking-wide text-gray-700 transition hover:border-[#9B1A1A] hover:text-[#9B1A1A]"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  [disabled]="registerForm.invalid || isLoading"
+                  class="flex h-10 items-center justify-center gap-2 rounded-[3px] bg-[#9B1A1A] px-4 text-[11px] font-bold uppercase tracking-wide text-white transition hover:bg-[#7A1515] disabled:cursor-not-allowed disabled:bg-[#C9A0A0]"
+                >
+                  <span *ngIf="!isLoading">
+                    Crear cuenta
+                  </span>
+
+                  <span *ngIf="isLoading" class="flex items-center gap-2">
+                    <span class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                    Registrando
+                  </span>
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>

@@ -20,7 +20,7 @@ def crear_hospital_con_almacenes(nombre_hospital: str, direccion: str, latitud: 
         query_sangres = f"SELECT id_sangre FROM {Config.SCHEMA}.t_tipo_sangre;"
         tipos_sangre = db.execute_query(query_sangres, fetchall=True, commit=False)
 
-        # 3. Le creamos un inventario en 0 litros para cada tipo de sangre
+        # 3.CALLE MARICA
         if tipos_sangre:
             query_inventario = f"""
                 INSERT INTO {Config.SCHEMA}.t_banco_sanguineo 

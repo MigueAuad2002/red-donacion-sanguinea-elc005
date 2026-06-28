@@ -8,6 +8,9 @@ import { EmergenciasListaComponent } from './pages/emergencias/emergencias-lista
 import { EmergenciasMapaComponent } from './pages/emergencias/emergencias-mapa/emergencias-mapa';
 import { NotificacionesComponent } from './pages/notificaciones/notificaciones/notificaciones';
 import { HospitalesComponent } from './pages/hospitales/hospitales';
+import { UsersComponent } from './pages/users/users';
+import { RegisterComponent } from './pages/register/register';
+import { CompatibilidadSanguineaComponent } from './pages/compatibilidad-sanguinea/compatibilidad-sanguinea';
 
 //LAYOUTS
 import { PrivateLayoutComponent } from './layouts/private-layout/private-layout';
@@ -31,14 +34,11 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [publicGuard]
   },
-
-  /*
   {
     path: 'register',
     component: RegisterComponent,
     canActivate: [publicGuard]
   },
-  */
 
   //RUTAS PRIVADAS CON LAYOUT GLOBAL
   {
@@ -70,6 +70,15 @@ export const routes: Routes = [
         path: 'hospitales',
         component: HospitalesComponent
       },
+      {
+
+        path: 'usuarios',
+        component: UsersComponent
+      },
+      {
+        path: 'compatibilidad-sanguinea',
+        component: CompatibilidadSanguineaComponent
+      }
 
       /*
       Más adelante puedes agregar aquí:
